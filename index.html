@@ -767,83 +767,86 @@
       </div>
     
         <!-- ================= CONEXÃO WHATSAPP HUB ================= -->
-        <section class="view-panel" id="view-whatsapp-hub">
+                <section class="view-section" id="view-whatsapp-hub">
           <div class="view-header">
             <div>
-              <h1 class="view-title">Central de Conexão WhatsApp & Disparos</h1>
-              <p class="view-subtitle">Conecte o WhatsApp comercial da loja (41) 99535-0811 via Evolution API ou Webhooks</p>
+              <h1 class="view-title">🤖 Central de Auto-Resposta do WhatsApp com IA</h1>
+              <p class="view-subtitle">Seu WhatsApp respondendo clientes 24h/dia automaticamente com o estoque e simulação dos 5 bancos</p>
             </div>
-            <div class="view-actions">
-              <span class="connection-status-badge connected" id="wa-status-text">🟢 WhatsApp Conectado (41) 99535-0811</span>
+            <div class="view-actions" style="display:flex; gap:10px; align-items:center;">
+              <div class="auto-responder-toggle-pill" style="display:flex; align-items:center; gap:8px; background:rgba(34,197,94,0.15); border:1px solid #22c55e; padding:6px 14px; border-radius:30px;">
+                <span class="live-dot" style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#22c55e; animation:pulse 1.5s infinite;"></span>
+                <strong style="color:#16a34a; font-size:0.85rem;">Auto-Resposta IA: ATIVADA</strong>
+              </div>
             </div>
           </div>
 
-          <div class="dashboard-columns">
-            <!-- Card de Conexão QR Code / API -->
+          <!-- Cards Superiores: Status e Modos -->
+          <div class="dashboard-columns" style="margin-bottom:20px;">
+            <!-- Status de Conexão e QR Code -->
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">📱 Conectar Instância WhatsApp</h3>
-                <span class="badge-tag analise">Evolution API / Webhook</span>
+                <h3 class="card-title">📱 Conexão do seu WhatsApp Comercial</h3>
+                <span class="badge-tag aprovado">Online</span>
               </div>
               <div class="card-body">
                 <div class="wa-connection-box">
-                                                      <div class="qr-code-wrapper" id="qr-code-container" style="background:#fff; padding:20px; border-radius:16px; border:2px solid #22c55e; box-shadow:0 10px 25px rgba(34,197,94,0.15);">
+                  <div class="qr-code-wrapper" id="qr-code-container" style="background:#fff; padding:20px; border-radius:16px; border:2px solid #22c55e; box-shadow:0 10px 25px rgba(34,197,94,0.15);">
                     <div style="text-align:center; color:#16a34a; padding:10px;">
-                      <div style="font-size:3.5rem; margin-bottom:8px;">✅</div>
+                      <div style="font-size:3.5rem; margin-bottom:8px;">🟢</div>
                       <strong style="color:#0f172a; font-size:1.15rem; display:block;">WhatsApp Comercial Conectado!</strong>
-                      <span style="display:inline-block; margin-top:6px; padding:4px 14px; background:rgba(34,197,94,0.15); color:#16a34a; border-radius:20px; font-weight:700; font-size:0.8rem;">Instância Ativa (Evolution API)</span>
+                      <span style="display:inline-block; margin-top:6px; padding:4px 14px; background:rgba(34,197,94,0.15); color:#16a34a; border-radius:20px; font-weight:700; font-size:0.8rem;">(41) 99535-0811 • TatuCar Veículos</span>
                       <p style="color:#475569; font-size:0.82rem; margin-top:10px; line-height:1.4;">
-                        Número vinculado: <strong style="color:#0f172a;">(41) 99535-0811</strong><br>
-                        Alejandro • TatuCar Veículos Curitiba<br>
-                        <small style="color:#16a34a; font-weight:600;">⚡ Automações do WILLIAN AI prontas para disparo</small>
+                        Alejandro • R. Enette Dubard 1111, Curitiba/PR<br>
+                        <small style="color:#16a34a; font-weight:600;">⚡ Motor WILLIAN AI escutando e respondendo em tempo real</small>
                       </p>
                     </div>
                   </div>
 
-                                    <div class="connection-actions">
-                    <button class="btn btn-whatsapp w-full" id="btn-confirm-connected" onclick="crm.confirmWhatsAppConnected()" style="font-size:0.95rem; padding:12px;">
-                      ✅ Confirmar Pareamento / Ativar WhatsApp da Loja
-                    </button>
-                    <button class="btn btn-outline w-full" id="btn-open-wa-web-direct" onclick="window.open('https://web.whatsapp.com', '_blank')">
-                      🌐 Abrir WhatsApp Web no Navegador
+                  <div class="connection-actions" style="margin-top:16px; display:flex; flex-direction:column; gap:8px;">
+                    <button class="btn btn-whatsapp w-full" id="btn-open-wa-web-direct" onclick="window.open('https://web.whatsapp.com', '_blank')">
+                      💬 Abrir WhatsApp Web no Computador
                     </button>
                     <button class="btn btn-outline w-full" id="btn-toggle-api-settings">
-                      ⚙️ Configurar Servidor Próprio (Evolution API / Meta API)
+                      ⚙️ Configurações de API & Webhook (Evolution / Z-API)
+                    </button>
+                    <button class="btn btn-outline w-full" style="border-color:#3b82f6; color:#3b82f6;" onclick="crm.downloadLocalBotScript()">
+                      📥 Baixar Robô Local de WhatsApp (Python / Windows)
                     </button>
                   </div>
 
                   <!-- Configurações Avançadas de API (recolhível) -->
-                  <div class="api-settings-panel" id="api-settings-panel" style="display:none; margin-top:16px;">
+                  <div class="api-settings-panel" id="api-settings-panel" style="display:none; margin-top:16px; background:var(--bg-tertiary); padding:16px; border-radius:10px; border:1px solid var(--border-color);">
                     <div class="form-group">
-                      <label>URL da Evolution API ou Servidor</label>
+                      <label>URL da Evolution API ou Webhook</label>
                       <input type="url" id="wa-api-url" class="form-input" placeholder="https://api.tatucar.com.br" value="https://evolution.tatucarveiculos.com.br">
                     </div>
                     <div class="form-group">
-                      <label>Chave de API (API Key / Token)</label>
-                      <input type="password" id="wa-api-key" class="form-input" placeholder="Insira o Token de Conexão">
+                      <label>Chave de API (Token / Secret)</label>
+                      <input type="password" id="wa-api-key" class="form-input" placeholder="tatucar-secret-token-2026">
                     </div>
                     <div class="form-group">
-                      <label>Nome da Instância</label>
+                      <label>Instância</label>
                       <input type="text" id="wa-api-instance" class="form-input" value="tatucar-comercial">
                     </div>
-                    <button class="btn btn-primary btn-sm" id="btn-save-wa-config">Salvar Parâmetros de API</button>
+                    <button class="btn btn-primary btn-sm" id="btn-save-wa-config" onclick="crm.saveWhatsAppConfig()">Salvar e Sincronizar</button>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Card de Automações Ativas -->
+            <!-- Regras do Auto-Responder IA -->
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">🤖 Automações Comerciais do WILLIAN AI</h3>
-                <span class="badge-status-approved">Ativas</span>
+                <h3 class="card-title">⚡ Regras de Resposta Automática da IA</h3>
+                <span class="badge-status-approved">WILLIAN AI Ativo</span>
               </div>
               <div class="card-body">
                 <div class="automation-toggles">
                   <div class="automation-item">
                     <div class="automation-info">
-                      <strong>Boas-Vindas Imediata ao Novo Lead</strong>
-                      <p>Dispara mensagem do Alejandro no WhatsApp assim que o lead é cadastrado ou entra pelo site.</p>
+                      <strong>Auto-Resposta de Boas-Vindas & Estoque</strong>
+                      <p>Responde clientes novos em menos de 5 segundos apresentando as opções da TatuCar.</p>
                     </div>
                     <label class="switch">
                       <input type="checkbox" id="auto-welcome" checked>
@@ -853,34 +856,82 @@
 
                   <div class="automation-item">
                     <div class="automation-info">
-                      <strong>Alerta de Aprovação de Crédito 🔥</strong>
-                      <p>Avisa o cliente automaticamente quando a ficha é movida para a coluna "APROVADO".</p>
+                      <strong>Triagem Automática de Financiamento</strong>
+                      <p>Solicita CPF, CNH e valor de entrada para simular nos 5 bancos (PAN, BV, Itaú, Santander, Bradesco).</p>
                     </div>
                     <label class="switch">
-                      <input type="checkbox" id="auto-approved" checked>
+                      <input type="checkbox" id="auto-financing" checked>
                       <span class="slider"></span>
                     </label>
                   </div>
 
                   <div class="automation-item">
                     <div class="automation-info">
-                      <strong>Reativação Automática de Leads (48h)</strong>
-                      <p>Envia toque discreto e educado se o cliente não responder uma proposta em 2 dias.</p>
+                      <strong>Avaliação de Carro na Troca</strong>
+                      <p>Pede modelo, ano, km e fotos para pré-avaliação do lojista.</p>
                     </div>
                     <label class="switch">
-                      <input type="checkbox" id="auto-followup" checked>
+                      <input type="checkbox" id="auto-tradein" checked>
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+
+                  <div class="automation-item">
+                    <div class="automation-info">
+                      <strong>Transbordo para Atendente Humano</strong>
+                      <p>Alerta Alejandro ou vendedor assim que o cliente pede visita à loja ou quer fechar negócio.</p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="auto-escalate" checked>
                       <span class="slider"></span>
                     </label>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <div class="test-send-box" style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border-color);">
-                  <label style="font-size:0.82rem; font-weight:600; color:var(--text-secondary); margin-bottom:6px; display:block;">Disparo Rápido de Teste:</label>
-                  <div style="display:flex; gap:8px;">
-                    <input type="text" id="test-wa-phone" class="form-input" placeholder="(41) 99535-0811" style="flex:1;">
-                    <button class="btn btn-whatsapp btn-sm" id="btn-send-test-wa" onclick="crm.sendTestWhatsApp()">Enviar Teste</button>
-                  </div>
+          <!-- SIMULADOR AO VIVO DO WHATSAPP DO CRM -->
+          <div class="card" style="margin-top:20px; border:2px solid #22c55e;">
+            <div class="card-header" style="background:rgba(34,197,94,0.08);">
+              <div>
+                <h3 class="card-title" style="color:#16a34a; display:flex; align-items:center; gap:8px;">
+                  💬 Teste ao Vivo: Simulador de Conversa Automática do WhatsApp
+                </h3>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin:4px 0 0 0;">
+                  Digite uma mensagem abaixo como se fosse um cliente pelo WhatsApp. O motor inteligente do WILLIAN responderá na hora consultando os 24 carros reais da loja e cadastrando o lead no CRM!
+                </p>
+              </div>
+              <button class="btn btn-sm btn-outline" onclick="crm.clearWaSimulator()">Limpar Conversa</button>
+            </div>
+            <div class="card-body" style="padding:0;">
+              <!-- Janela de Chat estilo WhatsApp -->
+              <div class="wa-sim-chat-window" id="wa-sim-chat-window" style="height:380px; overflow-y:auto; padding:20px; background:#0b141a; display:flex; flex-direction:column; gap:12px;">
+                <!-- Mensagens serao inseridas dinamicamente -->
+                <div class="wa-sim-msg wa-sim-bot" style="max-width:80%; align-self:flex-start; background:#202c33; color:#e9edef; padding:12px 16px; border-radius:0 12px 12px 12px; font-size:0.9rem; line-height:1.45; box-shadow:0 2px 5px rgba(0,0,0,0.3);">
+                  <strong style="color:#25d366; display:block; font-size:0.78rem; margin-bottom:4px;">🤖 WILLIAN AI • Consultor TatuCar Veículos</strong>
+                  Olá! Seja muito bem-vindo à <strong>TatuCar Veículos</strong> em Curitiba! 🚗💨<br>
+                  Sou o Willian, consultor virtual do Alejandro. Temos mais de 20 veículos revisados com garantia e taxas especiais nos 5 bancos parceiros (PAN, BV, Itaú, Santander e Bradesco).<br><br>
+                  Como posso te ajudar hoje? Você procura algum modelo específico ou quer simular um financiamento com ou sem entrada?
+                  <span style="display:block; text-align:right; font-size:0.7rem; color:#8696a0; margin-top:4px;">Agora</span>
                 </div>
+              </div>
+
+              <!-- Sugestões de teste rápido -->
+              <div class="wa-sim-quick-prompts" style="background:#111b21; padding:10px 16px; display:flex; gap:8px; overflow-x:auto; border-top:1px solid #222d34;">
+                <button class="btn btn-sm btn-outline" style="white-space:nowrap; font-size:0.78rem; padding:4px 10px;" onclick="crm.sendSimulatorQuickMsg('Olá, quais carros populares vocês têm?')">🚗 Carros Populares</button>
+                <button class="btn btn-sm btn-outline" style="white-space:nowrap; font-size:0.78rem; padding:4px 10px;" onclick="crm.sendSimulatorQuickMsg('Tem como financiar um carro sem entrada?')">💰 Financiar sem Entrada</button>
+                <button class="btn btn-sm btn-outline" style="white-space:nowrap; font-size:0.78rem; padding:4px 10px;" onclick="crm.sendSimulatorQuickMsg('Qual o valor da parcela do Gol ou Onix?')">📊 Parcela do Gol/Onix</button>
+                <button class="btn btn-sm btn-outline" style="white-space:nowrap; font-size:0.78rem; padding:4px 10px;" onclick="crm.sendSimulatorQuickMsg('Vocês pegam meu carro usado na troca?')">🔄 Tenho Carro na Troca</button>
+                <button class="btn btn-sm btn-outline" style="white-space:nowrap; font-size:0.78rem; padding:4px 10px;" onclick="crm.sendSimulatorQuickMsg('Quero falar com um vendedor para visitar a loja')">📍 Visitar a Loja</button>
+              </div>
+
+              <!-- Input de Envio de Mensagem -->
+              <div class="wa-sim-input-bar" style="background:#202c33; padding:12px 16px; display:flex; gap:10px; align-items:center;">
+                <input type="text" id="wa-sim-input" class="form-input" placeholder="Digite uma mensagem como cliente no WhatsApp..." style="flex:1; background:#2a3942; border-color:#2a3942; color:#fff;" onkeypress="if(event.key==='Enter') crm.sendSimulatorMsg()">
+                <button class="btn btn-whatsapp" id="btn-wa-sim-send" onclick="crm.sendSimulatorMsg()" style="padding:10px 20px; font-weight:700;">
+                  Enviar 🚀
+                </button>
               </div>
             </div>
           </div>

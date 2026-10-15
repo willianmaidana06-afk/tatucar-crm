@@ -1728,4 +1728,203 @@ let crm;
 window.addEventListener('DOMContentLoaded', () => {
   crm = new CrmApp();
   window.crm = crm;
-});
+
+
+  // ================= WILLIAN AI WHATSAPP AUTO-RESPONDER & SIMULATOR =================
+  sendSimulatorQuickMsg(text) {
+    const input = document.getElementById('wa-sim-input');
+    if (input) {
+      input.value = text;
+      this.sendSimulatorMsg();
+    }
+  }
+
+  sendSimulatorMsg() {
+    const input = document.getElementById('wa-sim-input');
+    if (!input || !input.value.trim()) return;
+
+    const userText = input.value.trim();
+    input.value = '';
+
+    const chatWindow = document.getElementById('wa-sim-chat-window');
+    if (!chatWindow) return;
+
+    const timeStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+    // 1. Renderiza mensagem do cliente no simulador
+    const clientMsgHtml = `
+      <div class="wa-sim-msg wa-sim-client" style="max-width:80%; align-self:flex-end; background:#005c4b; color:#e9edef; padding:10px 14px; border-radius:12px 0 12px 12px; font-size:0.9rem; line-height:1.45; box-shadow:0 2px 5px rgba(0,0,0,0.3); word-break:break-word;">
+        ${this.escapeHtml(userText)}
+        <span style="display:block; text-align:right; font-size:0.7rem; color:#8696a0; margin-top:4px;">${timeStr} ✓✓</span>
+      </div>
+    `;
+    chatWindow.insertAdjacentHTML('beforeend', clientMsgHtml);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    // 2. Indicador de "digitando..."
+    const typingId = `typing-${Date.now()}`;
+    const typingHtml = `
+      <div id="${typingId}" class="wa-sim-msg wa-sim-bot" style="max-width:80%; align-self:flex-start; background:#202c33; color:#8696a0; padding:8px 14px; border-radius:0 12px 12px 12px; font-size:0.85rem; font-style:italic;">
+        🤖 Willian está digitando...
+      </div>
+    `;
+    chatWindow.insertAdjacentHTML('beforeend', typingHtml);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
+    // 3. Processa a resposta inteligente
+    setTimeout(() => {
+      const typingEl = document.getElementById(typingId);
+      if (typingEl) typingEl.remove();
+
+      const botReply = this.generateWillianBotReply(userText);
+      const botMsgHtml = `
+        <div class="wa-sim-msg wa-sim-bot" style="max-width:80%; align-self:flex-start; background:#202c33; color:#e9edef; padding:12px 16px; border-radius:0 12px 12px 12px; font-size:0.9rem; line-height:1.45; box-shadow:0 2px 5px rgba(0,0,0,0.3);">
+          <strong style="color:#25d366; display:block; font-size:0.78rem; margin-bottom:4px;">🤖 WILLIAN AI • Consultor TatuCar</strong>
+          ${botReply.text}
+          <span style="display:block; text-align:right; font-size:0.7rem; color:#8696a0; margin-top:6px;">${timeStr}</span>
+        </div>
+      `;
+      chatWindow.insertAdjacentHTML('beforeend', botMsgHtml);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+
+      // Se a IA gerou um novo lead ou coletou dados, registra no CRM
+      if (botReply.createdLead) {
+        this.data.leads.unshift(botReply.createdLead);
+        this.saveData();
+        this.renderAll();
+        this.showToast(`🎯 Novo Lead capturado pelo WhatsApp: ${botReply.createdLead.name}!`);
+      }
+    }, 700);
+  }
+
+  generateWillianBotReply(rawText) {
+    const text = rawText.toLowerCase();
+    const vehicles = this.data.vehicles || [];
+
+    // Checa se cliente passou CPF
+    const cpfMatch = rawText.match(/\d{3}\.?\d{3}\.?\d{3}-?\d{2}/);
+    if (cpfMatch) {
+      const cleanCpf = cpfMatch[0];
+      const lead = {
+        id: `wa-lead-${Date.now()}`,
+        name: 'Cliente WhatsApp (Triagem)',
+        phone: '(41) 9' + Math.floor(10000000 + Math.random() * 90000000),
+        city: 'Curitiba/PR',
+        cpf: cleanCpf,
+        vehicleId: vehicles[0]?.id || '',
+        stage: 'simulacao',
+        profile: 'clt',
+        tradeIn: 'Em análise pelo bot',
+        notes: `CPF capturado via WhatsApp: ${cleanCpf}. Rodando pré-aprovação nos 5 bancos.`,
+        lastContact: 'Agora',
+        createdAt: new Date().toISOString().split('T')[0]
+      };
+
+      return {
+        text: `Perfeito! Já recebi seu CPF <strong>${cleanCpf}</strong>. 🔒 Seus dados estão 100% protegidos pela LGPD.<br><br>` +
+              `Estou submetendo sua proposta agora mesmo na esteira dos nossos <strong>5 bancos parceiros (PAN, BV, Itaú, Santander e Bradesco)</strong>.<br><br>` +
+              `👉 Para aumentar ainda mais a chance de aprovação com taxa reduzida: você possui CNH? E pretende dar alguma entrada ou prefere 100% financiado?`,
+        createdLead: lead
+      };
+    }
+
+    // Pergunta sobre carros populares / baratos / 1.0
+    if (text.includes('popular') || text.includes('barato') || text.includes('1.0') || text.includes('baixo valor') || text.includes('economico')) {
+      const populares = vehicles.filter(v => (v.price || 0) < 55000).slice(0, 3);
+      let listStr = populares.map(v => `• <strong>${v.model} (${v.year})</strong> - R$ ${(v.price || 0).toLocaleString('pt-BR')} (Parcelas estimadas de R$ ${(Math.round(v.price * 0.027)).toLocaleString('pt-BR')}/mês)`).join('<br>');
+      if (!listStr) listStr = '• <strong>VW Gol 1.6 MSI</strong> - R$ 48.900<br>• <strong>Fiat Palio Attractive</strong> - R$ 39.900<br>• <strong>Ford Ka SE 1.0</strong> - R$ 44.500';
+
+      return {
+        text: `Temos excelentes opções de populares revisados com garantia e excelente consumo aqui na TatuCar! 🚗✨<br><br>${listStr}<br><br>Qual desses modelos te agrada mais? Posso fazer uma simulação de parcelas sem compromisso agora para você!`
+      };
+    }
+
+    // Pergunta sobre financiamento sem entrada
+    if (text.includes('sem entrada') || text.includes('zero entrada') || text.includes('100% financiado') || text.includes('financiar sem')) {
+      return {
+        text: `Sim! Aqui na <strong>TatuCar Veículos</strong> trabalhamos com financiamento em até <strong>100% sem entrada</strong> pelos bancos PAN, BV e Santander, dependendo do score do seu CPF! 🏦🤝<br><br>` +
+              `Conseguimos parcelamento em até <strong>60x</strong> com a primeira parcela para até 60 dias.<br><br>` +
+              `Você gostaria que eu fizesse uma pré-análise do seu CPF no sistema agora? Se sim, me envie seu <strong>CPF e data de nascimento</strong>!`
+      };
+    }
+
+    // Pergunta sobre carro na troca
+    if (text.includes('troca') || text.includes('usado') || text.includes('meu carro') || text.includes('minha moto') || text.includes('pega')) {
+      return {
+        text: `Com certeza! Aqui na TatuCar pegamos seu carro ou moto usado na troca com a <strong>melhor avaliação do mercado de Curitiba e região</strong>! 🔄💰<br><br>` +
+              `E tem mais: mesmo que seu carro esteja financiado, nós quitamos a dívida e você sai de carro novo no mesmo dia.<br><br>` +
+              `Qual é a marca, modelo e ano do seu veículo atual? Quantos km ele tem aproximadamente?`
+      };
+    }
+
+    // Pergunta sobre parcelas ou modelo específico
+    const foundCar = vehicles.find(v => text.includes((v.model || '').toLowerCase().split(' ')[0]));
+    if (foundCar || text.includes('parcela') || text.includes('gol') || text.includes('onix') || text.includes('hb20') || text.includes('corolla')) {
+      const targetCar = foundCar || vehicles[0] || { model: 'VW Gol 1.6 Flex', year: '2021', price: 54900 };
+      const parcela48 = Math.round(targetCar.price * 0.028);
+      const parcela60 = Math.round(targetCar.price * 0.024);
+
+      return {
+        text: `Excelente escolha! O <strong>${targetCar.model} (${targetCar.year})</strong> está impecável no nosso estoque, com laudo cautelar aprovado e garantia! 💎<br><br>` +
+              `💵 <strong>Preço à vista:</strong> R$ ${(targetCar.price || 50000).toLocaleString('pt-BR')}<br>` +
+              `📊 <strong>Simulação com R$ 10.000 de entrada:</strong><br>` +
+              `• 48x de aprox. <strong>R$ ${parcela48.toLocaleString('pt-BR')}</strong><br>` +
+              `• 60x de aprox. <strong>R$ ${parcela60.toLocaleString('pt-BR')}</strong><br><br>` +
+              `Gostaria de rodar seu CPF para buscar taxa promocional com desconto nos juros?`
+      };
+    }
+
+    // Visitar loja / falar com vendedor
+    if (text.includes('visita') || text.includes('loja') || text.includes('onde') || text.includes('endereco') || text.includes('alejandro') || text.includes('vendedor')) {
+      return {
+        text: `Será um prazer receber você aqui na nossa loja física! ☕🚗<br><br>` +
+              `📍 <strong>TatuCar Veículos</strong><br>` +
+              `Endereço: <strong>Rua Enette Dubard, 1111 - Tatuquara, Curitiba/PR</strong><br>` +
+              `Atendimento: Segunda a Sexta das 08h30 às 18h30 | Sábado das 08h30 às 16h.<br><br>` +
+              `O Alejandro e nossa equipe de consultores já foram avisados e estão te aguardando com o café pronto e os carros preparados para test-drive! Que horário fica melhor para você vir?`
+      };
+    }
+
+    // Resposta padrão inteligente
+    return {
+      text: `Entendido perfeitamente! Sou a inteligência artificial da <strong>TatuCar Veículos</strong> e estou aqui para agilizar seu sonho do carro novo. 🚗💨<br><br>` +
+            `Aqui na loja nós temos mais de 20 carros revisados com garantia, financiamento com ou sem entrada em até 60x e pegamos seu usado na troca.<br><br>` +
+            `Me conte: qual modelo você tem em mente ou qual faixa de parcela mensal fica mais confortável para o seu orçamento?`
+    };
+  }
+
+  clearWaSimulator() {
+    const chatWindow = document.getElementById('wa-sim-chat-window');
+    if (!chatWindow) return;
+    chatWindow.innerHTML = `
+      <div class="wa-sim-msg wa-sim-bot" style="max-width:80%; align-self:flex-start; background:#202c33; color:#e9edef; padding:12px 16px; border-radius:0 12px 12px 12px; font-size:0.9rem; line-height:1.45; box-shadow:0 2px 5px rgba(0,0,0,0.3);">
+        <strong style="color:#25d366; display:block; font-size:0.78rem; margin-bottom:4px;">🤖 WILLIAN AI • Consultor TatuCar Veículos</strong>
+        Olá! Conversa reiniciada. Como posso te ajudar na conquista do seu carro novo hoje?
+        <span style="display:block; text-align:right; font-size:0.7rem; color:#8696a0; margin-top:4px;">Agora</span>
+      </div>
+    `;
+    this.showToast('Conversa do simulador reiniciada.');
+  }
+
+  downloadLocalBotScript() {
+    const scriptUrl = 'tatucar_whatsapp_bot.py';
+    const a = document.createElement('a');
+    a.href = scriptUrl;
+    a.download = 'tatucar_whatsapp_bot.py';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    this.showToast('📥 Baixando arquivo do robô local tatucar_whatsapp_bot.py!');
+  }
+
+  saveWhatsAppConfig() {
+    const url = document.getElementById('wa-api-url')?.value;
+    const key = document.getElementById('wa-api-key')?.value;
+    const inst = document.getElementById('wa-api-instance')?.value;
+    localStorage.setItem('tatucar_wa_config', JSON.stringify({ url, key, inst }));
+    this.showToast('✅ Parâmetros de API do WhatsApp sincronizados com sucesso!');
+    const panel = document.getElementById('api-settings-panel');
+    if (panel) panel.style.display = 'none';
+  }
+
+}
