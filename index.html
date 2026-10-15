@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TatuCar CRM | Gestão Comercial & WILLIAN AI</title>
+  <meta name="description" content="CRM Inteligente para TatuCar Veículos - Gestão comercial, estoque, pipeline de vendas e inteligência WILLIAN AI">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <!-- Layout Wrapper -->
+  <div class="app-layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/>
+              <circle cx="7" cy="17" r="2"/>
+              <path d="M9 17h6"/>
+              <circle cx="17" cy="17" r="2"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h2>TATUCAR</h2>
+            <span class="badge-role">CRM COMERCIAL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Profile Badge -->
+      <div class="consultant-card">
+        <div class="consultant-avatar">A</div>
+        <div class="consultant-info">
+          <strong>Alejandro</strong>
+          <span>Consultor de Vendas</span>
+        </div>
+        <div class="status-indicator online" title="Sistema Online"></div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">OPERAÇÃO</div>
+        
+        <button class="nav-item active" data-view="dashboard">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+          <span>Dashboard</span>
+        </button>
+
+        <button class="nav-item" data-view="pipeline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h6"/></svg>
+          <span>Pipeline (Kanban)</span>
+          <span class="badge-counter" id="badge-leads-count">0</span>
+        </button>
+
+        <button class="nav-item" data-view="clientes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Clientes & Leads</span>
+        </button>
+
+        <button class="nav-item" data-view="veiculos">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+          <span>Estoque de Veículos</span>
+        </button>
+
+        <button class="nav-item" data-view="propostas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span>Propostas & Crédito</span>
+        </button>
+
+        <button class="nav-item" data-view="tarefas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+          <span>Follow-up & Tarefas</span>
+          <span class="badge-alert" id="badge-tarefas-alert" style="display:none;">!</span>
+        </button>
+
+        <div class="nav-section-title">INTELIGÊNCIA & COPILOT</div>
+
+        <button class="nav-item nav-ai" data-view="willian-ai">
+          <div class="ai-sparkle">✨</div>
+          <span>WILLIAN AI Copilot</span>
+          <span class="badge-ai">IA</span>
+        </button>
+
+        <button class="nav-item" data-view="configuracoes">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Configurações & Backup</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="store-info-compact">
+          <small>TatuCar Veículos Curitiba</small>
+          <span>Rua Enette Dubard, 1111</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Header Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="btn-icon" id="toggle-sidebar" title="Alternar menu lateral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="breadcrumb">
+            <span class="breadcrumb-root">TatuCar</span>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current" id="current-page-title">Dashboard</span>
+          </div>
+        </div>
+
+        <div class="topbar-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="global-search" placeholder="Buscar cliente, CPF, telefone ou veículo...">
+        </div>
+
+        <div class="topbar-right">
+          <div class="quick-actions">
+            <button class="btn btn-outline" id="btn-quick-simulator">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              <span>Simular</span>
+            </button>
+            <button class="btn btn-primary" id="btn-quick-new-lead">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Novo Lead</span>
+            </button>
+          </div>
+          <button class="btn-icon theme-toggle" id="theme-toggle" title="Alternar tema escuro/claro">
+            <svg id="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- View Containers -->
+      <div class="content-body">
+        
+        <!-- ================= DASHBOARD VIEW ================= -->
+        <section class="view-panel active" id="view-dashboard">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Visão Geral da Operação</h1>
+              <p class="view-subtitle">Acompanhe métricas, conversões de crédito e ritmo de vendas do mês</p>
+            </div>
+            <div class="view-actions">
+              <span class="live-clock" id="live-clock">--:--:--</span>
+            </div>
+          </div>
+
+          <!-- KPI Cards Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon blue">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-label">Total de Leads Ativos</span>
+                <h3 class="kpi-value" id="kpi-total-leads">0</h3>
+                <span class="kpi-trend positive">↑ no funil comercial</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon yellow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-label">Em Análise Bancária</span>
+                <h3 class="kpi-value" id="kpi-analise-leads">0</h3>
+                <span class="kpi-trend neutral">Aguardando parecer</span>
+              </div>
+            </div>
+
+            <div class="kpi-card highlight-card">
+              <div class="kpi-icon green">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-label">Crédito Aprovado 🔥</span>
+                <h3 class="kpi-value" id="kpi-aprovados-leads">0</h3>
+                <span class="kpi-trend positive">Prontos para fechar</span>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-icon emerald">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="kpi-content">
+                <span class="kpi-label">Vendas Fechadas (Mês)</span>
+                <h3 class="kpi-value" id="kpi-vendas-mes">0</h3>
+                <span class="kpi-trend positive" id="kpi-volume-vendas">R$ 0,00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Secondary Dashboard Row -->
+          <div class="dashboard-columns">
+            <div class="card col-span-2">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">🚨 Clientes Prioritários / Follow-Up Urgente</h3>
+                  <p class="card-subtitle">Clientes parados ou com crédito liberado que precisam de contato</p>
+                </div>
+                <button class="btn btn-sm btn-outline" id="btn-refresh-alerts">Atualizar</button>
+              </div>
+              <div class="card-body no-padding">
+                <div class="table-responsive">
+                  <table class="data-table" id="table-priority-leads">
+                    <thead>
+                      <tr>
+                        <th>Cliente</th>
+                        <th>Veículo Desejado</th>
+                        <th>Fase</th>
+                        <th>Último Contato</th>
+                        <th>Ação Rápida</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">🚗 Estoque Disponível</h3>
+                  <p class="card-subtitle"><span id="dash-stock-count">0</span> veículos no pátio</p>
+                </div>
+                <button class="btn btn-sm btn-link" data-goto="veiculos">Ver todos →</button>
+              </div>
+              <div class="card-body">
+                <div class="mini-car-list" id="dash-mini-stock"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PIPELINE (KANBAN) VIEW ================= -->
+        <section class="view-panel" id="view-pipeline">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Funil Comercial TatuCar</h1>
+              <p class="view-subtitle">Arraste os cards entre as fases ou use os botões rápidos para avançar</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn btn-primary" id="btn-new-lead-kanban">+ Adicionar Lead</button>
+            </div>
+          </div>
+
+          <div class="kanban-board">
+            <div class="kanban-column" data-stage="NOVO">
+              <div class="column-header stage-novo">
+                <div class="column-title">
+                  <span class="column-indicator"></span>
+                  <h4>1. NOVO</h4>
+                  <span class="column-count" id="count-stage-novo">0</span>
+                </div>
+              </div>
+              <div class="column-cards" id="column-novo"></div>
+            </div>
+
+            <div class="kanban-column" data-stage="EM ANALISE">
+              <div class="column-header stage-analise">
+                <div class="column-title">
+                  <span class="column-indicator"></span>
+                  <h4>2. EM ANÁLISE</h4>
+                  <span class="column-count" id="count-stage-analise">0</span>
+                </div>
+              </div>
+              <div class="column-cards" id="column-analise"></div>
+            </div>
+
+            <div class="kanban-column" data-stage="APROVADO">
+              <div class="column-header stage-aprovado">
+                <div class="column-title">
+                  <span class="column-indicator"></span>
+                  <h4>3. APROVADO 🔥</h4>
+                  <span class="column-count" id="count-stage-aprovado">0</span>
+                </div>
+              </div>
+              <div class="column-cards" id="column-aprovado"></div>
+            </div>
+
+            <div class="kanban-column" data-stage="VENDA">
+              <div class="column-header stage-venda">
+                <div class="column-title">
+                  <span class="column-indicator"></span>
+                  <h4>4. VENDA</h4>
+                  <span class="column-count" id="count-stage-venda">0</span>
+                </div>
+              </div>
+              <div class="column-cards" id="column-venda"></div>
+            </div>
+
+            <div class="kanban-column" data-stage="FINALIZADO">
+              <div class="column-header stage-finalizado">
+                <div class="column-title">
+                  <span class="column-indicator"></span>
+                  <h4>5. FINALIZADO 🏆</h4>
+                  <span class="column-count" id="count-stage-finalizado">0</span>
+                </div>
+              </div>
+              <div class="column-cards" id="column-finalizado"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= CLIENTES VIEW ================= -->
+        <section class="view-panel" id="view-clientes">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Base de Clientes & Leads</h1>
+              <p class="view-subtitle">Gerenciamento completo de contatos, histórico e status de crédito</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn btn-outline" id="btn-export-clients">Exportar CSV</button>
+              <button class="btn btn-primary" id="btn-add-client">+ Cadastrar Cliente</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-filters">
+              <div class="filter-group">
+                <input type="text" class="input-search" id="filter-clients-search" placeholder="Filtrar por nome, telefone, CPF ou cidade...">
+              </div>
+              <div class="filter-group">
+                <select id="filter-clients-stage" class="form-select">
+                  <option value="">Todas as Etapas</option>
+                  <option value="NOVO">Novo</option>
+                  <option value="EM ANALISE">Em Análise</option>
+                  <option value="APROVADO">Aprovado</option>
+                  <option value="VENDA">Venda</option>
+                  <option value="FINALIZADO">Finalizado</option>
+                  <option value="REPROVADO">Reprovado</option>
+                  <option value="DESISTENTE">Desistente</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table" id="table-clients-full">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Telefone / WhatsApp</th>
+                    <th>Cidade/UF</th>
+                    <th>Perfil / Renda</th>
+                    <th>Veículo Alvo</th>
+                    <th>Fase Comercial</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VEÍCULOS / ESTOQUE VIEW ================= -->
+        <section class="view-panel" id="view-veiculos">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Estoque TatuCar Veículos</h1>
+              <p class="view-subtitle">Catálogo de seminovos, ficha técnica e gerador de anúncios com 1 clique</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn btn-outline" id="btn-sync-site" title="Recarregar catálogo oficial do site tatucarveiculos.com.br">🔄 Sincronizar Estoque do Site (24 Carros)</button>
+              <button class="btn btn-primary" id="btn-add-vehicle">+ Cadastrar Veículo</button>
+            </div>
+          </div>
+
+          <div class="inventory-controls">
+            <div class="filter-group flex-1">
+              <input type="text" id="filter-vehicles-search" class="input-search" placeholder="Buscar por modelo, marca, ano ou placa...">
+            </div>
+            <div class="filter-group">
+              <select id="filter-vehicles-status" class="form-select">
+                <option value="">Todos os Status</option>
+                <option value="DISPONIVEL">Disponível</option>
+                <option value="RESERVADO">Reservado</option>
+                <option value="VENDIDO">Vendido</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="vehicle-grid" id="vehicle-grid"></div>
+        </section>
+
+        <!-- ================= PROPOSTAS & FINANCIAMENTO VIEW ================= -->
+        <section class="view-panel" id="view-propostas">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Simulador de Financiamento & Propostas</h1>
+              <p class="view-subtitle">Calcule parcelas com taxas reais das financeiras parceiras e gere propostas</p>
+            </div>
+          </div>
+
+          <div class="dashboard-columns">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">💰 Nova Simulação de Crédito</h3>
+              </div>
+              <div class="card-body">
+                <form id="form-simulation">
+                  <div class="form-row">
+                    <div class="form-group flex-1">
+                      <label>Cliente</label>
+                      <select id="sim-client-select" class="form-select" required>
+                        <option value="">Selecione um cliente...</option>
+                      </select>
+                    </div>
+                    <div class="form-group flex-1">
+                      <label>Veículo Desejado</label>
+                      <select id="sim-vehicle-select" class="form-select" required>
+                        <option value="">Selecione um veículo...</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group flex-1">
+                      <label>Valor do Carro (R$)</label>
+                      <input type="number" id="sim-car-price" class="form-input" placeholder="Ex: 45000" required>
+                    </div>
+                    <div class="form-group flex-1">
+                      <label>Valor de Entrada (R$)</label>
+                      <input type="number" id="sim-down-payment" class="form-input" placeholder="0 se sem entrada" value="0">
+                      <small class="helper-text">Simulação sem entrada sujeita a análise bancária</small>
+                    </div>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group flex-1">
+                      <label>Taxa de Juros Mensal (%)</label>
+                      <input type="number" step="0.01" id="sim-interest-rate" class="form-input" value="1.69">
+                    </div>
+                    <div class="form-group flex-1">
+                      <label>Instituição Financeira</label>
+                      <select id="sim-bank" class="form-select">
+                        <option value="Santander Auto">Santander Auto</option>
+                        <option value="BV Financeira">BV Financeira</option>
+                        <option value="Banco PAN">Banco PAN</option>
+                        <option value="Itaú Veículos">Itaú Veículos</option>
+                        <option value="Bradesco">Bradesco Financiamentos</option>
+                        <option value="Omni">Omni Financeira</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button type="button" class="btn btn-primary w-full" id="btn-calculate-sim">
+                    Calcular Opções de Parcelamento
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">📊 Condições Calculadas</h3>
+                <span class="badge-status-approved" id="sim-status-badge">Pronto para Enviar</span>
+              </div>
+              <div class="card-body">
+                <div class="simulation-results-box" id="sim-results-box">
+                  <div class="empty-state-card">
+                    <p>Preencha os dados e clique em "Calcular Opções de Parcelamento" para gerar a simulação.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= FOLLOW-UP & TAREFAS VIEW ================= -->
+        <section class="view-panel" id="view-tarefas">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Follow-up & Tarefas Comerciais</h1>
+              <p class="view-subtitle">Não perca nenhuma oportunidade: agendamentos de visita, ligações e retornos</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn btn-primary" id="btn-add-task">+ Nova Tarefa</button>
+            </div>
+          </div>
+
+          <div class="tasks-container">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Lembretes & Compromissos</h3>
+              </div>
+              <div class="card-body no-padding">
+                <ul class="task-list" id="task-list"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= WILLIAN AI COPILOT VIEW ================= -->
+        <section class="view-panel" id="view-willian-ai">
+          <div class="view-header ai-header-banner">
+            <div>
+              <div class="ai-title-wrap">
+                <span class="ai-sparkle-lg">✨</span>
+                <h1 class="view-title">WILLIAN AI Copilot</h1>
+              </div>
+              <p class="view-subtitle">Inteligência Comercial Automotiva para a TatuCar Veículos</p>
+            </div>
+            <div class="ai-mode-tags">
+              <span class="mode-pill active">Modo Vendedor</span>
+              <span class="mode-pill active">Modo Marketing</span>
+              <span class="mode-pill active">Modo Gestor</span>
+            </div>
+          </div>
+
+          <div class="dashboard-columns">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">📝 Gerador de Anúncios e Copys Comerciais</h3>
+                <p class="card-subtitle">Seguindo rigorosamente as diretrizes da TatuCar</p>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label>Selecione o Veículo do Estoque</label>
+                  <select id="ai-vehicle-select" class="form-select">
+                    <option value="">Escolha um carro...</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Tipo de Conteúdo Desejado</label>
+                  <div class="radio-cards">
+                    <label class="radio-card">
+                      <input type="radio" name="ai-content-type" value="marketplace" checked>
+                      <div class="radio-card-content">
+                        <strong>Facebook Marketplace</strong>
+                        <small>Título otimizado + descrição estruturada + CTA</small>
+                      </div>
+                    </label>
+                    <label class="radio-card">
+                      <input type="radio" name="ai-content-type" value="reels">
+                      <div class="radio-card-content">
+                        <strong>Roteiro Reels / TikTok (15-30s)</strong>
+                        <small>Gancho + Carro + Condição + CTA falado</small>
+                      </div>
+                    </label>
+                    <label class="radio-card">
+                      <input type="radio" name="ai-content-type" value="recovery">
+                      <div class="radio-card-content">
+                        <strong>Script WhatsApp de Recuperação</strong>
+                        <small>Mensagem curta e humana para reativar lead</small>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+
+                <button class="btn btn-ai w-full" id="btn-generate-ai">
+                  ✨ Gerar Conteúdo com WILLIAN AI
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">📋 Conteúdo Pronto para Uso</h3>
+                <button class="btn btn-sm btn-outline" id="btn-copy-ai-output">Copiar Texto</button>
+              </div>
+              <div class="card-body">
+                <div class="ai-output-box" id="ai-output-box">
+                  <p class="text-muted">Selecione o veículo, escolha o tipo de conteúdo e clique em Gerar Conteúdo.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= CONFIGURAÇÕES & BACKUP VIEW ================= -->
+        <section class="view-panel" id="view-configuracoes">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Configurações & Gestão de Dados</h1>
+              <p class="view-subtitle">Segurança, backup do banco de dados local e parâmetros da loja</p>
+            </div>
+          </div>
+
+          <div class="dashboard-columns">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">💾 Backup & Restauração de Dados</h3>
+              </div>
+              <div class="card-body">
+                <p class="text-secondary mb-4">Todos os clientes, veículos, propostas e tarefas são salvos com segurança no armazenamento do seu navegador. Você pode baixar uma cópia de segurança a qualquer momento.</p>
+                <div class="action-buttons-stack">
+                  <button class="btn btn-primary" id="btn-export-json">
+                    📥 Fazer Backup Completo (.JSON)
+                  </button>
+                  <label class="btn btn-outline file-upload-label">
+                    📤 Restaurar Backup (.JSON)
+                    <input type="file" id="input-import-json" accept=".json" style="display:none;">
+                  </label>
+                  <button class="btn btn-danger-outline" id="btn-reset-demo-data">
+                    🔄 Restaurar Dados de Demonstração TatuCar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">🏢 Dados Operacionais da Loja</h3>
+              </div>
+              <div class="card-body">
+                <div class="info-list">
+                  <div class="info-item">
+                    <strong>Loja:</strong>
+                    <span>TatuCar Veículos Curitiba</span>
+                  </div>
+                  <div class="info-item">
+                    <strong>Endereço:</strong>
+                    <span>Rua Enette Dubard, 1111, Curitiba/PR</span>
+                  </div>
+                  <div class="info-item">
+                    <strong>WhatsApp Comercial:</strong>
+                    <span>(41) 99535-0811</span>
+                  </div>
+                  <div class="info-item">
+                    <strong>Consultor Responsável:</strong>
+                    <span>Alejandro</span>
+                  </div>
+                  <div class="info-item">
+                    <strong>Agente Conectado:</strong>
+                    <span>WILLIAN AI v2.2</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= MODAIS ================= -->
+
+  <!-- Modal: Lead -->
+  <div class="modal-overlay" id="modal-lead">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-lead-title">Cadastrar Novo Lead</h3>
+        <button class="btn-close-modal" data-close="modal-lead">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-lead">
+          <input type="hidden" id="lead-id">
+          
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label>Nome Completo *</label>
+              <input type="text" id="lead-name" class="form-input" placeholder="Ex: Roberto Carlos Silva" required>
+            </div>
+            <div class="form-group flex-1">
+              <label>Telefone / WhatsApp *</label>
+              <input type="text" id="lead-phone" class="form-input" placeholder="(41) 99999-9999" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Cidade / Estado</label>
+              <input type="text" id="lead-city" class="form-input" placeholder="Curitiba/PR" value="Curitiba/PR">
+            </div>
+            <div class="form-group flex-1">
+              <label>CPF (para simulação)</label>
+              <input type="text" id="lead-cpf" class="form-input" placeholder="000.000.000-00">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Veículo de Interesse</label>
+              <select id="lead-vehicle-select" class="form-select"></select>
+            </div>
+            <div class="form-group flex-1">
+              <label>Etapa do Funil</label>
+              <select id="lead-stage" class="form-select">
+                <option value="NOVO">1. Novo Lead</option>
+                <option value="EM ANALISE">2. Em Análise</option>
+                <option value="APROVADO">3. Aprovado 🔥</option>
+                <option value="VENDA">4. Venda em Andamento</option>
+                <option value="FINALIZADO">5. Finalizado / Entregue</option>
+                <option value="REPROVADO">Reprovado</option>
+                <option value="DESISTENTE">Desistente</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Perfil do Cliente</label>
+              <select id="lead-profile" class="form-select">
+                <option value="CLT">Registrado / CLT</option>
+                <option value="Autônomo">Autônomo</option>
+                <option value="Motorista App">Motorista de Aplicativo</option>
+                <option value="Aposentado">Aposentado / Pensionista</option>
+                <option value="Score Baixo">Score Baixo</option>
+                <option value="Sem CNH">Sem CNH</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label>Tem Carro na Troca?</label>
+              <input type="text" id="lead-trade-in" class="form-input" placeholder="Ex: Celta 2008 ou Não tem">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Observações Comerciais / Histórico</label>
+            <textarea id="lead-notes" class="form-textarea" rows="3" placeholder="Informações de negociação, valor de parcela desejada..."></textarea>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" data-close="modal-lead">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar Lead</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Veículo -->
+  <div class="modal-overlay" id="modal-vehicle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-vehicle-title">Cadastrar Veículo no Estoque</h3>
+        <button class="btn-close-modal" data-close="modal-vehicle">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-vehicle">
+          <input type="hidden" id="vehicle-id">
+
+          <div class="form-row">
+            <div class="form-group flex-2">
+              <label>Marca e Modelo *</label>
+              <input type="text" id="vehicle-model" class="form-input" placeholder="Ex: Chevrolet Onix 1.0 LT" required>
+            </div>
+            <div class="form-group flex-1">
+              <label>Ano Fabricação / Modelo *</label>
+              <input type="text" id="vehicle-year" class="form-input" placeholder="Ex: 2018/2019" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Preço Venda (R$) *</label>
+              <input type="number" id="vehicle-price" class="form-input" placeholder="48900" required>
+            </div>
+            <div class="form-group flex-1">
+              <label>Quilometragem (KM)</label>
+              <input type="number" id="vehicle-km" class="form-input" placeholder="Ex: 78000">
+            </div>
+            <div class="form-group flex-1">
+              <label>Cor</label>
+              <input type="text" id="vehicle-color" class="form-input" placeholder="Branco">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Câmbio</label>
+              <select id="vehicle-transmission" class="form-select">
+                <option value="Manual">Manual</option>
+                <option value="Automático">Automático</option>
+                <option value="CVT">CVT</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label>Combustível</label>
+              <select id="vehicle-fuel" class="form-select">
+                <option value="Flex">Flex (Álcool/Gasolina)</option>
+                <option value="Gasolina">Gasolina</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Híbrido">Híbrido</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label>Status</label>
+              <select id="vehicle-status" class="form-select">
+                <option value="DISPONIVEL">Disponível</option>
+                <option value="RESERVADO">Reservado</option>
+                <option value="VENDIDO">Vendido</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Opcionais & Destaques</label>
+            <input type="text" id="vehicle-features" class="form-input" placeholder="Ar condicionado, Direção elétrica, Vidros elétricos...">
+          </div>
+
+          <div class="form-group">
+            <label>URL da Foto do Carro</label>
+            <input type="url" id="vehicle-photo" class="form-input" placeholder="https://images.unsplash.com/...">
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" data-close="modal-vehicle">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar Veículo</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Tarefa -->
+  <div class="modal-overlay" id="modal-task">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Criar Nova Tarefa / Agendamento</h3>
+        <button class="btn-close-modal" data-close="modal-task">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-task">
+          <div class="form-group">
+            <label>Descrição da Tarefa *</label>
+            <input type="text" id="task-title" class="form-input" placeholder="Ex: Ligar para confirmar aprovação do Santander" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label>Data Limite / Horário</label>
+              <input type="datetime-local" id="task-due-date" class="form-input" required>
+            </div>
+            <div class="form-group flex-1">
+              <label>Prioridade</label>
+              <select id="task-priority" class="form-select">
+                <option value="Alta">🔴 Alta Prioridade</option>
+                <option value="Media" selected>🟡 Média</option>
+                <option value="Baixa">🟢 Baixa</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" data-close="modal-task">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar Tarefa</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: WhatsApp -->
+  <div class="modal-overlay" id="modal-whatsapp">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>💬 Disparo de WhatsApp - WILLIAN AI</h3>
+        <button class="btn-close-modal" data-close="modal-whatsapp">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="whatsapp-target-info">
+          Enviando para: <strong id="wa-target-name">Cliente</strong> (<span id="wa-target-phone">00000-0000</span>)
+        </div>
+        
+        <div class="form-group">
+          <label>Selecione o Modelo de Mensagem:</label>
+          <div class="template-selector">
+            <button type="button" class="btn-template active" data-template="welcome">Boas-Vindas</button>
+            <button type="button" class="btn-template" data-template="approved">Crédito Aprovado 🔥</button>
+            <button type="button" class="btn-template" data-template="recovery">Recuperação Lead</button>
+            <button type="button" class="btn-template" data-template="visit">Convite para Loja</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Mensagem Formatada:</label>
+          <textarea id="wa-message-text" class="form-textarea" rows="5"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" data-close="modal-whatsapp">Fechar</button>
+          <button type="button" class="btn btn-whatsapp" id="btn-open-whatsapp-now">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17.472 14.382c-.301-.15-1.78-.878-2.056-.979-.276-.1-.476-.15-.676.15-.2.301-.776.979-.951 1.179-.175.2-.351.226-.652.075-1.78-.891-2.946-1.59-4.116-3.601-.311-.535.311-.497.89-1.656.099-.2.05-.375-.026-.525-.075-.15-.676-1.629-.926-2.23-.244-.587-.492-.507-.676-.516l-.576-.01c-.2 0-.526.075-.802.375s-1.053 1.028-1.053 2.507 1.078 2.908 1.228 3.109c.15.2 2.122 3.24 5.141 4.544 2.15.93 2.98.924 4.03.769.64-.094 1.78-.727 2.03-1.429.251-.702.251-1.303.176-1.428-.075-.126-.275-.201-.576-.351zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.95.558 3.771 1.528 5.315L2 22l4.82-1.503c1.488.887 3.228 1.39 5.22 1.39 5.524 0 10.012-4.488 10.012-10.012C22.052 6.488 17.564 2 12.04 2z"/></svg>
+            Abrir no WhatsApp Web
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">Ação concluída com sucesso!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
