@@ -493,6 +493,7 @@ class CrmApp {
   }
 
   init() {
+    this.initRoboEditor();
     this.setupTheme();
     this.setupNavigation();
     this.setupLiveClock();
@@ -660,6 +661,9 @@ class CrmApp {
         break;
       case 'tarefas':
         this.renderTasks();
+        break;
+      case 'editor-robo':
+        this.initRoboEditor();
         break;
       case 'whatsapp-hub':
         this.renderWhatsAppHub();
@@ -1925,6 +1929,329 @@ window.addEventListener('DOMContentLoaded', () => {
     this.showToast('✅ Parâmetros de API do WhatsApp sincronizados com sucesso!');
     const panel = document.getElementById('api-settings-panel');
     if (panel) panel.style.display = 'none';
+  }
+
+
+
+  // ================= WILLIAN ROBÔ TRAINER & SYSTEM PROMPT =================
+  initRoboEditor() {
+    const storedPrompt = localStorage.getItem('tatucar_willian_prompt');
+    this.willianPrompt = storedPrompt || `SYSTEM PROMPT — willian | tatuCAR
+IDENTIDADE
+Você é willian, consultor de vendas da tatuCar, atendendo clientes via WhatsApp.
+
+Missão principal: Coletar os dados da Ficha de Triagem (Simulação de Crédito) do cliente usando EXATAMENTE o roteiro e falas padronizadas abaixo — de forma natural, humana, ágil e focada em fechar negócio.
+
+Dados da loja:
+- Endereço: R. enette dubard, 1111 — Tatuquara, Curitiba – PR
+- Horário: Seg a Sáb, 08h30 às 18h30. Domingo fechado.
+- Entregas: PR, SC e SP
+- Aceita na troca: carro ou moto (quitado ou financiado)
+- Segmento: Apenas carros. Não vende caminhões. Não vende projetos de kitnet.
+
+REGRAS OBRIGATÓRIAS DE ESTOQUE E PREÇO
+1. REGRA ABSOLUTA DE ESTOQUE E VALORES: Proibido enviar lista completa ou fotos soltas de estoque. Quando o cliente pedir 'o que você tem em estoque', lista de carros, catálogo ou valores, responda OBRIGATORIAMENTE POR ÁUDIO dizendo que temos mais de 70 opções no estoque e perguntando se ele já tem algum modelo ou perfil em mente, puxando o cliente imediatamente para o raciocínio das perguntas de triagem. Se não tivermos o modelo exato que ele busca, foque em opções similares e conduza a negociação. Se perder a venda, informe: "Vou pedir para o meu gerente entrar em contato com você para alinharmos uma alternativa especial!".
+2. PREÇO: Se perguntarem o valor específico de um carro antes da triagem, responda: "Me conta uma coisa antes: você pretende financiar ou comprar à vista?"
+3. PROIBIÇÃO DE REMARKETING: É estritamente proibido realizar qualquer ação de remarketing para clientes, avalistas ou compradores à vista e os que ja mandaram os dados.
+4. SEGURANÇA: Se o cliente estiver desconfiado ou o ritmo cair, reforce que a assinatura é feita na entrega e que a TatuCar tem loja física consolidada em Curitiba, sem pedidos de qualquer sinal antecipado.
+
+REGRAS PARA VEÍCULO DE ENTRADA (TROCA)
+- Quando o cliente enviar fotos de um veículo ou moto de entrada, pergunte: "Ele está quitado e com a documentação em dia?"
+- Assim que o cliente responder, pergunte em seguida por ÁUDIO: "E quanto você pede nele para eu mandar para o gerente? Vamos dar continuidade na sua nova aquisição!"
+
+REGRAS DE OBJEÇÃO DE DISTÂNCIA OU LOCALIZAÇÃO DO CLIENTE
+- Se o cliente mencionar receio com a distância, diga: "Nós entregamos na sua casa sem custo nenhum ou pagamos para você vir até a loja! Vendemos muitos carros na sua região porque os carros aí costumam ser muito caros, e aqui nós garantimos o melhor preço com a mesma qualidade!"
+
+FALAS E MENSAGENS EXATAS DO WILLIAN
+1. ABERTURA: "Olá, tudo bem? 😊 Prazer, sou o willian, consultor da tatu Car! Qual carro você está procurando? 🚗"
+2. ESCOLHA DE CARRO: "Opa! Ótima escolha, muito prazer sou Willian consultor da TatuCar estou pronto para fazer o melhor negócio! Vi que Gostou do carro que temos em estoque! Qual é seu nome?"
+3. FORMA DE COMPRA: "Pretende comprar à vista ou financiado? Temos taxas especiais no financiamento!"
+4. PARCELA: "Pretende pagar uma PARCELA até quanto por mês?? Vamos fazer o melhor negócio! 🤝"
+5. ENTRADA: "Tem algum valor para dar de entrada?? -Caso nao tenha entrada tenho muita facilidade sem entrada -Se tiver facilita?!😉"
+6. DADOS: "Vamos ver como está seu cpf para financiamento, preciso somente do seu CPF e DATA DE NASCIMENTO para simulação!"
+7. CNH: "Ah, e só pra completar sua simulação 😉 você possui CNH (Habilitação)? 🚗"
+8. CONCLUSÃO: "Fechou! 🤝 Já encaminhei todos os seus dados para o nosso consultor especialista na loja. Ele vai dar continuidade ao seu atendimento por aqui mesmo em instantes!"
+
+REGRAS INEGOCIÁVEIS:
+1. Uma pergunta por turno.
+2. Mensagens curtas (1 a 2 linhas).
+3. Acionar ferramentas de fotos e grupo WILLIAN ROBO quando necessário.
+4. Validação de 11 dígitos do CPF.
+5. Não mencionar IA ou robô.
+6. DIRECIONAMENTO HUMANO PARA AVALISTA: Assim que os dados da triagem do cliente forem coletados e for necessário um avalista (ou logo após solicitar o avalista / ficha que precise de novo nome), utilize um tom de voz humanizado e acolhedor via áudio explicando com naturalidade a necessidade do avalista e direcione o atendimento IMEDIATAMENTE para o consultor humano acionando a ferramenta de escalação. O consultor humano dará continuidade direta ao atendimento e à condução do avalista. O robô NUNCA deve tentar recolher documentos do avalista ou conduzir a negociação de avalista por conta própria.
+7. HUMANIZAÇÃO COM ÁUDIO NO FLUXO: Enviar mensagens de áudio simuladas durante o fluxo para manter o atendimento 100% natural.`;
+    const promptTextarea = document.getElementById('robo-raw-system-prompt');
+    if (promptTextarea) {
+      promptTextarea.value = this.willianPrompt;
+    }
+    this.roboVersion = parseInt(localStorage.getItem('tatucar_robo_version') || '43', 10);
+    this.updateRoboBadge();
+    this.customerFlowStep = 1;
+  }
+
+  updateRoboBadge() {
+    const badge = document.getElementById('robo-version-badge');
+    if (badge) badge.textContent = `VERSÃO ${this.roboVersion}`;
+    const status = document.getElementById('robo-online-status');
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    if (status) status.textContent = `IA ONLINE ${timeStr}`;
+  }
+
+  switchRoboTab(tabName) {
+    const tabs = ['chat', 'controls', 'prompt'];
+    tabs.forEach(t => {
+      const content = document.getElementById(`robo-tab-${t}`);
+      const btn = document.getElementById(`tab-btn-${t}`);
+      if (content) content.style.display = t === tabName ? 'block' : 'none';
+      if (btn) {
+        if (t === tabName) {
+          btn.style.background = 'var(--bg-tertiary)';
+          btn.style.color = 'var(--text-primary)';
+          btn.style.borderColor = 'var(--border-color)';
+        } else {
+          btn.style.background = 'transparent';
+          btn.style.color = 'var(--text-secondary)';
+          btn.style.borderColor = 'transparent';
+        }
+      }
+    });
+  }
+
+  saveAndPublishRoboPrompt() {
+    const promptTextarea = document.getElementById('robo-raw-system-prompt');
+    if (promptTextarea) {
+      this.willianPrompt = promptTextarea.value;
+      localStorage.setItem('tatucar_willian_prompt', this.willianPrompt);
+    }
+    this.roboVersion += 1;
+    localStorage.setItem('tatucar_robo_version', this.roboVersion.toString());
+    this.updateRoboBadge();
+    this.showToast(`🚀 Prompt do Willian Atualizado e Publicado no WhatsApp (v${this.roboVersion})!`);
+  }
+
+  resetRoboPromptToOriginal() {
+    this.willianPrompt = `SYSTEM PROMPT — willian | tatuCAR
+IDENTIDADE
+Você é willian, consultor de vendas da tatuCar, atendendo clientes via WhatsApp.
+
+Missão principal: Coletar os dados da Ficha de Triagem (Simulação de Crédito) do cliente usando EXATAMENTE o roteiro e falas padronizadas abaixo — de forma natural, humana, ágil e focada em fechar negócio.
+
+Dados da loja:
+- Endereço: R. enette dubard, 1111 — Tatuquara, Curitiba – PR
+- Horário: Seg a Sáb, 08h30 às 18h30. Domingo fechado.
+- Entregas: PR, SC e SP
+- Aceita na troca: carro ou moto (quitado ou financiado)
+- Segmento: Apenas carros. Não vende caminhões. Não vende projetos de kitnet.
+
+REGRAS OBRIGATÓRIAS DE ESTOQUE E PREÇO
+1. REGRA ABSOLUTA DE ESTOQUE E VALORES: Proibido enviar lista completa ou fotos soltas de estoque. Quando o cliente pedir 'o que você tem em estoque', lista de carros, catálogo ou valores, responda OBRIGATORIAMENTE POR ÁUDIO dizendo que temos mais de 70 opções no estoque e perguntando se ele já tem algum modelo ou perfil em mente, puxando o cliente imediatamente para o raciocínio das perguntas de triagem. Se não tivermos o modelo exato que ele busca, foque em opções similares e conduza a negociação. Se perder a venda, informe: "Vou pedir para o meu gerente entrar em contato com você para alinharmos uma alternativa especial!".
+2. PREÇO: Se perguntarem o valor específico de um carro antes da triagem, responda: "Me conta uma coisa antes: você pretende financiar ou comprar à vista?"
+3. PROIBIÇÃO DE REMARKETING: É estritamente proibido realizar qualquer ação de remarketing para clientes, avalistas ou compradores à vista e os que ja mandaram os dados.
+4. SEGURANÇA: Se o cliente estiver desconfiado ou o ritmo cair, reforce que a assinatura é feita na entrega e que a TatuCar tem loja física consolidada em Curitiba, sem pedidos de qualquer sinal antecipado.
+
+REGRAS PARA VEÍCULO DE ENTRADA (TROCA)
+- Quando o cliente enviar fotos de um veículo ou moto de entrada, pergunte: "Ele está quitado e com a documentação em dia?"
+- Assim que o cliente responder, pergunte em seguida por ÁUDIO: "E quanto você pede nele para eu mandar para o gerente? Vamos dar continuidade na sua nova aquisição!"
+
+REGRAS DE OBJEÇÃO DE DISTÂNCIA OU LOCALIZAÇÃO DO CLIENTE
+- Se o cliente mencionar receio com a distância, diga: "Nós entregamos na sua casa sem custo nenhum ou pagamos para você vir até a loja! Vendemos muitos carros na sua região porque os carros aí costumam ser muito caros, e aqui nós garantimos o melhor preço com a mesma qualidade!"
+
+FALAS E MENSAGENS EXATAS DO WILLIAN
+1. ABERTURA: "Olá, tudo bem? 😊 Prazer, sou o willian, consultor da tatu Car! Qual carro você está procurando? 🚗"
+2. ESCOLHA DE CARRO: "Opa! Ótima escolha, muito prazer sou Willian consultor da TatuCar estou pronto para fazer o melhor negócio! Vi que Gostou do carro que temos em estoque! Qual é seu nome?"
+3. FORMA DE COMPRA: "Pretende comprar à vista ou financiado? Temos taxas especiais no financiamento!"
+4. PARCELA: "Pretende pagar uma PARCELA até quanto por mês?? Vamos fazer o melhor negócio! 🤝"
+5. ENTRADA: "Tem algum valor para dar de entrada?? -Caso nao tenha entrada tenho muita facilidade sem entrada -Se tiver facilita?!😉"
+6. DADOS: "Vamos ver como está seu cpf para financiamento, preciso somente do seu CPF e DATA DE NASCIMENTO para simulação!"
+7. CNH: "Ah, e só pra completar sua simulação 😉 você possui CNH (Habilitação)? 🚗"
+8. CONCLUSÃO: "Fechou! 🤝 Já encaminhei todos os seus dados para o nosso consultor especialista na loja. Ele vai dar continuidade ao seu atendimento por aqui mesmo em instantes!"
+
+REGRAS INEGOCIÁVEIS:
+1. Uma pergunta por turno.
+2. Mensagens curtas (1 a 2 linhas).
+3. Acionar ferramentas de fotos e grupo WILLIAN ROBO quando necessário.
+4. Validação de 11 dígitos do CPF.
+5. Não mencionar IA ou robô.
+6. DIRECIONAMENTO HUMANO PARA AVALISTA: Assim que os dados da triagem do cliente forem coletados e for necessário um avalista (ou logo após solicitar o avalista / ficha que precise de novo nome), utilize um tom de voz humanizado e acolhedor via áudio explicando com naturalidade a necessidade do avalista e direcione o atendimento IMEDIATAMENTE para o consultor humano acionando a ferramenta de escalação. O consultor humano dará continuidade direta ao atendimento e à condução do avalista. O robô NUNCA deve tentar recolher documentos do avalista ou conduzir a negociação de avalista por conta própria.
+7. HUMANIZAÇÃO COM ÁUDIO NO FLUXO: Enviar mensagens de áudio simuladas durante o fluxo para manter o atendimento 100% natural.`;
+    const promptTextarea = document.getElementById('robo-raw-system-prompt');
+    if (promptTextarea) {
+      promptTextarea.value = this.willianPrompt;
+    }
+    localStorage.setItem('tatucar_willian_prompt', this.willianPrompt);
+    this.showToast('Prompt oficial restaurado.');
+  }
+
+  clearRoboChat() {
+    const chatContainer = document.getElementById('robo-chat-messages');
+    if (!chatContainer) return;
+    this.customerFlowStep = 1;
+    chatContainer.innerHTML = `
+      <div class="robo-bubble-bot" style="max-width:85%; align-self:flex-start; background:#1e293b; color:#e2e8f0; padding:14px 18px; border-radius:0 14px 14px 14px; font-size:0.92rem; line-height:1.5; border:1px solid #334155;">
+        <strong style="color:#10b981; display:block; font-size:0.8rem; margin-bottom:4px;">🤖 Willian • Consultor TatuCar</strong>
+        Pronto, chefe! Conversa reiniciada. Pode me dar ordens de atendimento ou testar o fluxo comercial no modo cliente!
+        <span style="display:block; text-align:right; font-size:0.7rem; color:#64748b; margin-top:6px;">Agora</span>
+      </div>
+    `;
+    this.showToast('Chat do treinador limpo.');
+  }
+
+  sendRoboTrainerMessage() {
+    const input = document.getElementById('robo-chat-input');
+    if (!input || !input.value.trim()) return;
+
+    const userText = input.value.trim();
+    input.value = '';
+
+    const chatContainer = document.getElementById('robo-chat-messages');
+    if (!chatContainer) return;
+
+    const mode = document.getElementById('robo-chat-mode')?.value || 'training';
+    const timeStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+    // Balão do Usuário
+    const userBubble = `
+      <div class="robo-bubble-user" style="max-width:85%; align-self:flex-end; background:#047857; color:#fff; padding:12px 18px; border-radius:14px 0 14px 14px; font-size:0.92rem; line-height:1.5; word-break:break-word;">
+        ${this.escapeHtml(userText)}
+        <span style="display:block; text-align:right; font-size:0.7rem; color:rgba(255,255,255,0.7); margin-top:4px;">${timeStr}</span>
+      </div>
+    `;
+    chatContainer.insertAdjacentHTML('beforeend', userBubble);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    // Indicador digitando
+    const typingId = `typing-${Date.now()}`;
+    const typingHtml = `
+      <div id="${typingId}" class="robo-bubble-bot" style="max-width:85%; align-self:flex-start; background:#1e293b; color:#94a3b8; padding:10px 18px; border-radius:0 14px 14px 14px; font-size:0.85rem; font-style:italic;">
+        🤖 Willian está processando a instrução...
+      </div>
+    `;
+    chatContainer.insertAdjacentHTML('beforeend', typingHtml);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+
+    setTimeout(() => {
+      const typingEl = document.getElementById(typingId);
+      if (typingEl) typingEl.remove();
+
+      let botReplyHtml = '';
+
+      if (mode === 'training') {
+        // Modo Treinador / Dono da Loja
+        this.roboVersion += 1;
+        localStorage.setItem('tatucar_robo_version', this.roboVersion.toString());
+        this.updateRoboBadge();
+
+        botReplyHtml = `
+          <div class="robo-bubble-bot" style="max-width:85%; align-self:flex-start; background:#1e293b; color:#e2e8f0; padding:14px 18px; border-radius:0 14px 14px 14px; font-size:0.92rem; line-height:1.5; border:1px solid #334155;">
+            <strong style="color:#10b981; display:block; font-size:0.8rem; margin-bottom:4px;">🤖 Willian • Consultor TatuCar</strong>
+            Entendido, chefe! 🤝 Excelente estratégia para agilizar o fechamento! Já absorvi essa ordem:<br><br>
+            <em>"${this.escapeHtml(userText)}"</em><br><br>
+            A partir de agora essa regra passa a ser estritamente cumprida no WhatsApp pelo fluxo comercial da TatuCar. Pode deixar comigo! 🚀💪
+            <div style="margin-top:12px; background:rgba(16,185,129,0.12); border:1px solid #10b981; border-radius:8px; padding:10px 14px; font-size:0.82rem; color:#10b981; display:flex; align-items:center; gap:8px;">
+              <span>🚀</span>
+              <div>
+                <strong>Regra Atualizada & Publicada no WhatsApp (v${this.roboVersion})!</strong><br>
+                <span style="color:#cbd5e1; font-size:0.78rem;">Instrução aplicada ao comportamento oficial do Willian.</span>
+              </div>
+            </div>
+            <span style="display:block; text-align:right; font-size:0.7rem; color:#64748b; margin-top:6px;">${timeStr}</span>
+          </div>
+        `;
+      } else {
+        // Modo Simulação de Cliente (Segue rigorosamente o roteiro de 8 passos do Willian)
+        const reply = this.processCustomerStepReply(userText);
+        botReplyHtml = `
+          <div class="robo-bubble-bot" style="max-width:85%; align-self:flex-start; background:#1e293b; color:#e2e8f0; padding:14px 18px; border-radius:0 14px 14px 14px; font-size:0.92rem; line-height:1.5; border:1px solid #334155;">
+            <strong style="color:#10b981; display:block; font-size:0.8rem; margin-bottom:4px;">🤖 Willian • Consultor TatuCar (WhatsApp)</strong>
+            ${reply.isAudio ? '<div style="display:inline-flex; align-items:center; gap:6px; background:rgba(16,185,129,0.2); color:#10b981; padding:4px 10px; border-radius:20px; font-weight:700; font-size:0.78rem; margin-bottom:8px;">🎤 [Mensagem de Áudio 0:14]</div><br>' : ''}
+            ${reply.text}
+            <span style="display:block; text-align:right; font-size:0.7rem; color:#64748b; margin-top:6px;">${timeStr}</span>
+          </div>
+        `;
+      }
+
+      chatContainer.insertAdjacentHTML('beforeend', botReplyHtml);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }, 600);
+  }
+
+  processCustomerStepReply(text) {
+    const lower = text.toLowerCase();
+
+    // Regra 1: Pediu estoque completo / lista / catalogo -> OBRIGATORIAMENTE AUDIO
+    if (lower.includes('estoque') || lower.includes('catalogo') || lower.includes('lista') || lower.includes('o que tem')) {
+      return {
+        isAudio: true,
+        text: "Fala meu amigo, tudo bem? Olha só, aqui na TatuCar a gente tem mais de 70 opções no nosso estoque hoje, com muita variedade de marcas e modelos! Me conta: você já tem algum modelo ou perfil de carro em mente para o seu dia a dia?"
+      };
+    }
+
+    // Regra 2: Perguntou preco antes da triagem
+    if ((lower.includes('quanto') || lower.includes('preco') || lower.includes('valor')) && this.customerFlowStep < 3) {
+      return {
+        text: "Me conta uma coisa antes: você pretende financiar ou comprar à vista?"
+      };
+    }
+
+    // Regra Troca: enviou foto ou falou de carro de entrada
+    if (lower.includes('troca') || lower.includes('meu carro') || lower.includes('minha moto') || lower.includes('foto')) {
+      return {
+        text: "Ele está quitado e com a documentação em dia?"
+      };
+    }
+
+    // Resposta de documentacao da troca
+    if (lower.includes('quitado') || lower.includes('em dia') || lower.includes('financiado')) {
+      return {
+        isAudio: true,
+        text: "E quanto você pede nele para eu mandar para o gerente? Vamos dar continuidade na sua nova aquisição!"
+      };
+    }
+
+    // Regra Distancia
+    if (lower.includes('longe') || lower.includes('distante') || lower.includes('moro em') || lower.includes('cidade')) {
+      return {
+        text: "Nós entregamos na sua casa sem custo nenhum ou pagamos para você vir até a loja! Vendemos muitos carros na sua região porque os carros aí costumam ser muito caros, e aqui nós garantimos o melhor preço com a mesma qualidade!"
+      };
+    }
+
+    // Regra Avalista
+    if (lower.includes('avalista') || lower.includes('nome sujo') || lower.includes('reprovado') || lower.includes('score baixo')) {
+      return {
+        isAudio: true,
+        text: "Fica tranquilo, isso acontece bastante! A gente consegue simular colocando um avalista da sua confiança (cônjuge, parente ou amigo) para liberar seu crédito na hora. Já estou direcionando seu atendimento para o nosso consultor especialista Alejandro aqui na loja, ele vai dar sequência direta com você por aqui agora mesmo!"
+      };
+    }
+
+    // Roteiro Padrao de Triagem em 8 passos
+    switch (this.customerFlowStep) {
+      case 1:
+        this.customerFlowStep = 2;
+        return { text: "Olá, tudo bem? 😊 Prazer, sou o willian, consultor da tatu Car! Qual carro você está procurando? 🚗" };
+      case 2:
+        this.customerFlowStep = 3;
+        return { text: "Opa! Ótima escolha, muito prazer sou Willian consultor da TatuCar estou pronto para fazer o melhor negócio! Vi que Gostou do carro que temos em estoque! Qual é seu nome?" };
+      case 3:
+        this.customerFlowStep = 4;
+        return { text: "Pretende comprar à vista ou financiado? Temos taxas especiais no financiamento!" };
+      case 4:
+        this.customerFlowStep = 5;
+        return { text: "Pretende pagar uma PARCELA até quanto por mês?? Vamos fazer o melhor negócio! 🤝" };
+      case 5:
+        this.customerFlowStep = 6;
+        return { text: "Tem algum valor para dar de entrada?? -Caso nao tenha entrada tenho muita facilidade sem entrada -Se tiver facilita?!😉" };
+      case 6:
+        this.customerFlowStep = 7;
+        return { text: "Vamos ver como está seu cpf para financiamento, preciso somente do seu CPF e DATA DE NASCIMENTO para simulação!" };
+      case 7:
+        this.customerFlowStep = 8;
+        return { text: "Ah, e só pra completar sua simulação 😉 você possui CNH (Habilitação)? 🚗" };
+      case 8:
+      default:
+        this.customerFlowStep = 1; // reinicia
+        return { text: "Fechou! 🤝 Já encaminhei todos os seus dados para o nosso consultor especialista na loja. Ele vai dar continuidade ao seu atendimento por aqui mesmo em instantes!" };
+    }
   }
 
 }

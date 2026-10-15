@@ -2,12 +2,15 @@
 =============================================================================
 TATUCAR VEÍCULOS - ROBÔ DE AUTO-RESPOSTA WHATSAPP (WILLIAN AI)
 =============================================================================
-Este script conecta o seu WhatsApp diretamente ao motor de vendas do CRM.
-Ele recebe mensagens dos clientes e responde automaticamente com:
-- Catálogo de veículos reais da TatuCar Veículos em Curitiba
-- Simulação de financiamento pelos 5 bancos (PAN, BV, Itaú, Santander, Bradesco)
-- Coleta de dados (CPF, CNH, Entrada) e cadastro automático no CRM
-- Transbordo para Alejandro em caso de visita física à loja
+SYSTEM PROMPT OFICIAL: willian | tatuCAR
+- Endereço: R. Enette Dubard, 1111 — Tatuquara, Curitiba/PR
+- Horário: Seg a Sáb, 08h30 às 18h30. Domingo fechado.
+- Entregas: PR, SC e SP
+- Aceita na troca: carro ou moto (quitado ou financiado)
+- Segmento: Apenas carros. Não vende caminhões. Não vende projetos de kitnet.
+- Roteiro oficial de 8 passos para Ficha de Triagem (Simulação de Crédito)
+- Regra Inegociável: Uma pergunta por turno, mensagens curtas humanizadas
+- Direcionamento humano imediato para Avalista
 =============================================================================
 """
 
@@ -17,20 +20,35 @@ import json
 import time
 import re
 from http.server import HTTPServer, BaseHTTPRequestHandler
-import urllib.request
-import urllib.parse
 
 PORT = 8000
 STOCK_FILE = os.path.join(os.path.dirname(__file__), 'assets', 'tatucar_cars.json')
 LEADS_FILE = os.path.join(os.path.dirname(__file__), 'leads_whatsapp_capturados.json')
+STATE_FILE = os.path.join(os.path.dirname(__file__), 'chat_states.json')
+
+def load_states():
+    if os.path.exists(STATE_FILE):
+        try:
+            with open(STATE_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
+
+def save_states(states):
+    try:
+        with open(STATE_FILE, 'w', encoding='utf-8') as f:
+            json.dump(states, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
 
 def load_stock():
     if os.path.exists(STOCK_FILE):
         try:
             with open(STOCK_FILE, 'r', encoding='utf-8') as f:
                 return json.load(f)
-        except Exception as e:
-            print(f"[AVISO] Erro ao carregar estoque: {e}")
+        except Exception:
+            pass
     return []
 
 def save_lead(lead_data):
@@ -46,76 +64,120 @@ def save_lead(lead_data):
         json.dump(leads, f, ensure_ascii=False, indent=2)
     print(f"[NOVO LEAD] {lead_data.get('name')} salvo no arquivo {LEADS_FILE}")
 
-def generate_ai_reply(sender_phone, raw_text):
+def generate_willian_reply(sender_phone, raw_text):
     text = raw_text.lower().strip()
-    vehicles = load_stock()
+    states = load_states()
+    user_state = states.get(sender_phone, {"step": 1, "data": {}})
 
-    # 1. Identifica CPF
-    cpf_match = re.search(r'\d{3}\.?\d{3}\.?\d{3}-?\d{2}', raw_text)
-    if cpf_match:
-        cpf = cpf_match.group(0)
-        lead = {
+    # 1. Checa se o cliente enviou CPF (Validação de 11 dígitos)
+    cpf_digits = re.sub(r'\D', '', raw_text)
+    if len(cpf_digits) == 11 or re.search(r'\d{3}\.?\d{3}\.?\d{3}-?\d{2}', raw_text):
+        cpf = raw_text.strip()
+        user_state["data"]["cpf"] = cpf
+        user_state["step"] = 7
+        states[sender_phone] = user_state
+        save_states(states)
+        save_lead({
             "id": f"wa-{int(time.time())}",
             "phone": sender_phone,
             "cpf": cpf,
-            "name": f"Cliente WhatsApp ({sender_phone})",
-            "notes": f"CPF informado via WhatsApp: {cpf}. Aguardando triagem dos 5 bancos.",
+            "name": user_state["data"].get("name", f"Cliente ({sender_phone})"),
+            "notes": f"Triagem Willian: CPF {cpf} coletado. CNH e Entrada em análise.",
             "stage": "simulacao",
             "date": time.strftime("%Y-%m-%d %H:%M:%S")
-        }
-        save_lead(lead)
-        return (
-            f"Perfeito! Já anotei o seu CPF *{cpf}* com total segurança e sigilo pela LGPD. 🔒\n\n"
-            f"Estou rodando sua proposta na esteira de aprovação dos nossos *5 bancos parceiros (PAN, BV, Itaú, Santander e Bradesco)*.\n\n"
-            f"👉 Para acelerar a aprovação com as menores taxas: você possui CNH? E pretende dar alguma entrada ou prefere 100% financiado?"
-        )
+        })
+        return "Ah, e só pra completar sua simulação 😉 você possui CNH (Habilitação)? 🚗"
 
-    # 2. Carros populares / econômicos
-    if any(k in text for k in ['popular', 'barato', '1.0', 'baixo valor', 'economico']):
-        populares = [v for v in vehicles if v.get('price', 0) < 55000][:3]
-        if populares:
-            carros_txt = "\n".join([f"• *{v['model']} ({v['year']})* - R$ {v['price']:,.2f} (Aprox. R$ {round(v['price']*0.027):,.2f}/mês)" for v in populares])
-        else:
-            carros_txt = "• *VW Gol 1.6 Flex* - R$ 48.900\n• *Fiat Palio Attractive* - R$ 39.900\n• *Ford Ka SE 1.0* - R$ 44.500"
-        return (
-            f"Temos excelentes opções de populares revisados com garantia e procedência na TatuCar! 🚗✨\n\n"
-            f"{carros_txt}\n\n"
-            f"Qual desses você quer conhecer melhor? Posso calcular as parcelas personalizadas para o seu bolso agora mesmo!"
-        )
+    # 2. Regra Avalista / Escalação Humana Imediata
+    if any(k in text for k in ['avalista', 'reprovado', 'nome sujo', 'restricao', 'score baixo']):
+        return "🎤 [Mensagem de Áudio 0:15]\n\"Fica tranquilo, isso acontece bastante! A gente consegue colocar um avalista da sua confiança para liberar seu crédito na hora. Já estou acionando o Alejandro aqui na loja e ele vai dar continuidade direta com você agora mesmo!\""
 
-    # 3. Financiamento sem entrada
-    if any(k in text for k in ['sem entrada', 'zero entrada', '100% financiado', 'financiar sem']):
-        return (
-            f"Sim! Aqui na *TatuCar Veículos* trabalhamos com financiamento em até *100% sem entrada* pelos bancos parceiros (PAN, BV, Santander), sujeito à análise de score do seu CPF! 🏦🤝\n\n"
-            f"Parcelamos em até *60x* e a 1ª parcela pode ficar para até 60 dias.\n\n"
-            f"Quer que eu faça a consulta da sua pré-aprovação sem custo? Se sim, me envie seu *CPF e data de nascimento* por aqui!"
-        )
+    # 3. Regra Estoque / Catálogo -> Proibido lista solta! OBRIGATORIAMENTE ÁUDIO
+    if any(k in text for k in ['estoque', 'catalogo', 'lista', 'o que tem', 'quais carros']):
+        return "🎤 [Mensagem de Áudio 0:14]\n\"Fala meu amigo, tudo bem? Olha só, aqui na TatuCar a gente tem mais de 70 opções no nosso estoque hoje, com muita variedade! Me conta uma coisa: você já tem algum modelo ou perfil em mente para o seu dia a dia?\""
 
-    # 4. Troca
-    if any(k in text for k in ['troca', 'usado', 'meu carro', 'minha moto', 'pega']):
-        return (
-            f"Com certeza! Pegamos seu carro ou moto usado na troca com a *melhor avaliação de Curitiba e Região*! 🔄💰\n\n"
-            f"E se o seu veículo ainda estiver financiado, a gente quita a dívida e você sai de carro novo no mesmo dia.\n\n"
-            f"Qual é o *modelo, ano e km* aproximado do seu carro atual?"
-        )
+    # 3. Regra Preço antes da triagem
+    if any(k in text for k in ['quanto custa', 'qual o valor', 'qual preco', 'tá quanto', 'ta quanto']) and user_state["step"] < 3:
+        return "Me conta uma coisa antes: você pretende financiar ou comprar à vista?"
 
-    # 5. Visita à loja
-    if any(k in text for k in ['visita', 'loja', 'onde', 'endereco', 'alejandro', 'vendedor', 'rua']):
-        return (
-            f"Será um prazer receber você na nossa loja física! ☕🚗\n\n"
-            f"📍 *TatuCar Veículos*\n"
-            f"Endereço: *Rua Enette Dubard, 1111 - Tatuquara, Curitiba/PR*\n"
-            f"Atendimento: Seg à Sex das 08h30 às 18h30 | Sáb das 08h30 às 16h.\n\n"
-            f"O Alejandro e nossa equipe de consultores já estão a postos para o test-drive! Que horário fica bom para você vir tomar um café com a gente?"
-        )
+    # 4. Regra Troca
+    if any(k in text for k in ['troca', 'meu carro', 'minha moto', 'pega usado', 'foto']):
+        user_state["data"]["troca"] = True
+        states[sender_phone] = user_state
+        save_states(states)
+        return "Ele está quitado e com a documentação em dia?"
 
-    # 6. Resposta Padrão
-    return (
-        f"Olá! Seja bem-vindo à *TatuCar Veículos* em Curitiba! 🚗💨\n"
-        f"Sou o *Willian*, consultor virtual da loja.\n\n"
-        f"Temos mais de 20 veículos revisados com garantia, financiamento com ou sem entrada em até 60x e pegamos seu usado na troca.\n\n"
-        f"Qual modelo você está procurando ou qual valor de parcela mensal fica ideal para você?"
-    )
+    if user_state.get("data", {}).get("troca") and any(k in text for k in ['quitado', 'em dia', 'financiado', 'sim', 'nao', 'não']):
+        user_state["data"]["troca"] = False
+        states[sender_phone] = user_state
+        save_states(states)
+        return "🎤 [Mensagem de Áudio 0:12]\n\"E quanto você pede nele para eu mandar para o gerente? Vamos dar continuidade na sua nova aquisição!\""
+
+    # 5. Regra Objeção de Distância
+    if any(k in text for k in ['longe', 'distante', 'moro em', 'outra cidade', 'sc', 'sp']):
+        return "Nós entregamos na sua casa sem custo nenhum ou pagamos para você vir até a loja! Vendemos muitos carros na sua região porque os carros aí costumam ser muito caros, e aqui nós garantimos o melhor preço com a mesma qualidade!"
+
+    # 6. Regra Avalista / Escalação Humana Imediata
+    if any(k in text for k in ['avalista', 'reprovado', 'nome sujo', 'restricao', 'score baixo']):
+        return "🎤 [Mensagem de Áudio 0:15]\n\"Fica tranquilo, isso acontece bastante! A gente consegue colocar um avalista da sua confiança para liberar seu crédito na hora. Já estou acionando o Alejandro aqui na loja e ele vai dar continuidade direta com você agora mesmo!\""
+
+    # 7. Fluxo Passo a Passo do Roteiro Oficial
+    step = user_state.get("step", 1)
+
+    if step == 1:
+        user_state["step"] = 2
+        states[sender_phone] = user_state
+        save_states(states)
+        return "Olá, tudo bem? 😊 Prazer, sou o willian, consultor da tatu Car! Qual carro você está procurando? 🚗"
+
+    elif step == 2:
+        user_state["data"]["carro_procurado"] = raw_text
+        user_state["step"] = 3
+        states[sender_phone] = user_state
+        save_states(states)
+        return "Opa! Ótima escolha, muito prazer sou Willian consultor da TatuCar estou pronto para fazer o melhor negócio! Vi que Gostou do carro que temos em estoque! Qual é seu nome?"
+
+    elif step == 3:
+        user_state["data"]["name"] = raw_text.strip()
+        user_state["step"] = 4
+        states[sender_phone] = user_state
+        save_states(states)
+        return "Pretende comprar à vista ou financiado? Temos taxas especiais no financiamento!"
+
+    elif step == 4:
+        user_state["data"]["forma_pagamento"] = raw_text.strip()
+        user_state["step"] = 5
+        states[sender_phone] = user_state
+        save_states(states)
+        return "Pretende pagar uma PARCELA até quanto por mês?? Vamos fazer o melhor negócio! 🤝"
+
+    elif step == 5:
+        user_state["data"]["parcela"] = raw_text.strip()
+        user_state["step"] = 6
+        states[sender_phone] = user_state
+        save_states(states)
+        return "Tem algum valor para dar de entrada?? -Caso nao tenha entrada tenho muita facilidade sem entrada -Se tiver facilita?!😉"
+
+    elif step == 6:
+        user_state["data"]["entrada"] = raw_text.strip()
+        user_state["step"] = 7
+        states[sender_phone] = user_state
+        save_states(states)
+        return "Vamos ver como está seu cpf para financiamento, preciso somente do seu CPF e DATA DE NASCIMENTO para simulação!"
+
+    elif step == 7:
+        user_state["data"]["dados_cpf"] = raw_text.strip()
+        user_state["step"] = 8
+        states[sender_phone] = user_state
+        save_states(states)
+        return "Ah, e só pra completar sua simulação 😉 você possui CNH (Habilitação)? 🚗"
+
+    else:
+        user_state["data"]["cnh"] = raw_text.strip()
+        user_state["step"] = 1
+        states[sender_phone] = user_state
+        save_states(states)
+        return "Fechou! 🤝 Já encaminhei todos os seus dados para o nosso consultor especialista na loja. Ele vai dar continuidade ao seu atendimento por aqui mesmo em instantes!"
 
 class WebhookHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -125,9 +187,9 @@ class WebhookHandler(BaseHTTPRequestHandler):
         self.end_headers()
         res = {
             "status": "online",
-            "service": "TatuCar WhatsApp Auto-Responder",
             "bot": "WILLIAN AI",
-            "store": "TatuCar Veículos (41) 99535-0811"
+            "store": "TatuCar Veículos",
+            "system_prompt": "willian | tatuCAR (v43)"
         }
         self.wfile.write(json.dumps(res, ensure_ascii=False).encode('utf-8'))
 
@@ -149,7 +211,7 @@ class WebhookHandler(BaseHTTPRequestHandler):
             sender = data['data'].get('key', {}).get('remoteJid', sender)
 
         print(f"\n[MENSAGEM RECEBIDA] De: {sender} | Texto: {text}")
-        reply = generate_ai_reply(sender, text)
+        reply = generate_willian_reply(sender, text)
         print(f"[RESPOSTA AUTOMÁTICA ENVIADA]:\n{reply}\n" + "-"*50)
 
         self.send_response(200)
@@ -164,41 +226,15 @@ class WebhookHandler(BaseHTTPRequestHandler):
         }
         self.wfile.write(json.dumps(response_payload, ensure_ascii=False).encode('utf-8'))
 
-def run_server():
+if __name__ == '__main__':
     server_address = ('', PORT)
     httpd = HTTPServer(server_address, WebhookHandler)
     print("="*65)
-    print(f"🚀 SERVIDOR DO ROBÔ WHATSAPP TATUCAR ATIVO NA PORTA {PORT}")
-    print("="*65)
-    print(f"• URL do Webhook: http://localhost:{PORT}")
-    print(f"• Pronto para receber mensagens do WhatsApp da loja e responder 24h")
-    print(f"• Pressione Ctrl+C para encerrar o serviço.")
+    print("🚀 SERVIDOR WILLIAN AI (TATUCAR VEÍCULOS) ATIVO NA PORTA 8000")
+    print("• Roteiro Oficial de 8 passos ativo com falas padronizadas")
+    print("• Validação de 11 dígitos do CPF & Escalação Humana no Avalista")
     print("="*65)
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
-        print("\nServidor encerrado pelo usuário.")
-
-def run_interactive_test():
-    print("="*65)
-    print("💬 MODO DE TESTE INTERATIVO DO WILLIAN AI (WHATSAPP TATUCAR)")
-    print("Digite mensagens como se fosse um cliente no WhatsApp para ver a IA responder.")
-    print("Digite 'sair' para encerrar.")
-    print("="*65)
-    while True:
-        try:
-            msg = input("\nCliente WhatsApp: ")
-            if msg.lower().strip() in ['sair', 'exit', 'quit']:
-                break
-            reply = generate_ai_reply("41999999999", msg)
-            print("\n" + reply)
-        except (KeyboardInterrupt, EOFError):
-            break
-
-if __name__ == '__main__':
-    if '--server' in sys.argv:
-        run_server()
-    elif '--test' in sys.argv:
-        run_interactive_test()
-    else:
-        run_server()
+        print("\nServidor encerrado.")
