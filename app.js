@@ -576,6 +576,8 @@ class CrmApp {
       'veiculos': 'Estoque de Veículos',
       'propostas': 'Simulador & Financiamento',
       'tarefas': 'Follow-up & Tarefas',
+      'whatsapp-hub': 'Central de WhatsApp & Automações',
+      'facebook-poster': 'Postador Automático Facebook & Marketplace',
       'willian-ai': 'WILLIAN AI Copilot',
       'configuracoes': 'Configurações & Backup'
     };
@@ -654,6 +656,12 @@ class CrmApp {
         break;
       case 'tarefas':
         this.renderTasks();
+        break;
+      case 'whatsapp-hub':
+        this.renderWhatsAppHub();
+        break;
+      case 'facebook-poster':
+        this.renderFacebookPoster();
         break;
       case 'willian-ai':
         this.populateSelects();
@@ -1399,6 +1407,22 @@ Posso te passar os detalhes agora?"`;
     document.getElementById('input-import-json')?.addEventListener('change', (e) => this.importBackup(e));
     document.getElementById('btn-reset-demo-data')?.addEventListener('click', () => this.resetDemoData());
     document.getElementById('btn-export-clients')?.addEventListener('click', () => this.exportClientsCSV());
+    // WhatsApp Hub Listeners
+    document.getElementById('btn-generate-qr')?.addEventListener('click', () => this.generateWhatsAppQr());
+    document.getElementById('btn-send-test-wa')?.addEventListener('click', () => this.sendTestWhatsApp());
+    document.getElementById('btn-toggle-api-settings')?.addEventListener('click', () => {
+      const panel = document.getElementById('api-settings-panel');
+      if (panel) panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    });
+    document.getElementById('btn-save-wa-config')?.addEventListener('click', () => {
+      this.showToast('Configurações de API salvas com sucesso!');
+      document.getElementById('api-settings-panel').style.display = 'none';
+    });
+
+    // Facebook Poster Listeners
+    document.getElementById('btn-post-to-marketplace')?.addEventListener('click', () => this.postToFacebookMarketplace());
+    document.getElementById('btn-copy-fb-package')?.addEventListener('click', () => this.copyFacebookPackage());
+
   }
 
   // ================= CRUD OPERATIONS =================

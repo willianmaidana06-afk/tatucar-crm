@@ -79,6 +79,20 @@
           <span class="badge-alert" id="badge-tarefas-alert" style="display:none;">!</span>
         </button>
 
+        <div class="nav-section-title">AUTOMAÇÃO & CANAIS</div>
+
+        <button class="nav-item" data-view="whatsapp-hub">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>
+          <span>Conexão WhatsApp</span>
+          <span class="badge-status-dot offline" id="wa-connection-dot" title="Desconectado"></span>
+        </button>
+
+        <button class="nav-item" data-view="facebook-poster">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          <span>Postador Facebook</span>
+          <span class="badge-counter" style="background:rgba(59,130,246,0.2); color:#60a5fa;">Auto</span>
+        </button>
+
         <div class="nav-section-title">INTELIGÊNCIA & COPILOT</div>
 
         <button class="nav-item nav-ai" data-view="willian-ai">
@@ -646,6 +660,241 @@
         </section>
 
       </div>
+    
+        <!-- ================= CONEXÃO WHATSAPP HUB ================= -->
+        <section class="view-panel" id="view-whatsapp-hub">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Central de Conexão WhatsApp & Disparos</h1>
+              <p class="view-subtitle">Conecte o WhatsApp comercial da loja (41) 99535-0811 via Evolution API ou Webhooks</p>
+            </div>
+            <div class="view-actions">
+              <span class="connection-status-badge disconnected" id="wa-status-text">🔴 WhatsApp Desconectado</span>
+            </div>
+          </div>
+
+          <div class="dashboard-columns">
+            <!-- Card de Conexão QR Code / API -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">📱 Conectar Instância WhatsApp</h3>
+                <span class="badge-tag analise">Evolution API / Webhook</span>
+              </div>
+              <div class="card-body">
+                <div class="wa-connection-box">
+                  <div class="qr-code-wrapper" id="qr-code-container">
+                    <!-- QR Code Renderizado -->
+                    <div class="qr-placeholder" id="qr-placeholder">
+                      <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><line x1="7" y1="7" x2="7.01" y2="7"/><line x1="17" y1="7" x2="17.01" y2="7"/><line x1="7" y1="17" x2="7.01" y2="17"/><line x1="17" y1="17" x2="17.01" y2="17"/></svg>
+                      <p>Clique em "Gerar QR Code de Conexão" para parear com o WhatsApp da loja</p>
+                    </div>
+                  </div>
+
+                  <div class="connection-actions">
+                    <button class="btn btn-whatsapp w-full" id="btn-generate-qr">
+                      📲 Conectar WhatsApp Comercial (Parear QR Code)
+                    </button>
+                    <button class="btn btn-outline w-full" id="btn-toggle-api-settings">
+                      ⚙️ Configurar Servidor Próprio (Evolution API / Meta API)
+                    </button>
+                  </div>
+
+                  <!-- Configurações Avançadas de API (recolhível) -->
+                  <div class="api-settings-panel" id="api-settings-panel" style="display:none; margin-top:16px;">
+                    <div class="form-group">
+                      <label>URL da Evolution API ou Servidor</label>
+                      <input type="url" id="wa-api-url" class="form-input" placeholder="https://api.tatucar.com.br" value="https://evolution.tatucarveiculos.com.br">
+                    </div>
+                    <div class="form-group">
+                      <label>Chave de API (API Key / Token)</label>
+                      <input type="password" id="wa-api-key" class="form-input" placeholder="Insira o Token de Conexão">
+                    </div>
+                    <div class="form-group">
+                      <label>Nome da Instância</label>
+                      <input type="text" id="wa-api-instance" class="form-input" value="tatucar-comercial">
+                    </div>
+                    <button class="btn btn-primary btn-sm" id="btn-save-wa-config">Salvar Parâmetros de API</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card de Automações Ativas -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">🤖 Automações Comerciais do WILLIAN AI</h3>
+                <span class="badge-status-approved">Ativas</span>
+              </div>
+              <div class="card-body">
+                <div class="automation-toggles">
+                  <div class="automation-item">
+                    <div class="automation-info">
+                      <strong>Boas-Vindas Imediata ao Novo Lead</strong>
+                      <p>Dispara mensagem do Alejandro no WhatsApp assim que o lead é cadastrado ou entra pelo site.</p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="auto-welcome" checked>
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+
+                  <div class="automation-item">
+                    <div class="automation-info">
+                      <strong>Alerta de Aprovação de Crédito 🔥</strong>
+                      <p>Avisa o cliente automaticamente quando a ficha é movida para a coluna "APROVADO".</p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="auto-approved" checked>
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+
+                  <div class="automation-item">
+                    <div class="automation-info">
+                      <strong>Reativação Automática de Leads (48h)</strong>
+                      <p>Envia toque discreto e educado se o cliente não responder uma proposta em 2 dias.</p>
+                    </div>
+                    <label class="switch">
+                      <input type="checkbox" id="auto-followup" checked>
+                      <span class="slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="test-send-box" style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border-color);">
+                  <label style="font-size:0.82rem; font-weight:600; color:var(--text-secondary); margin-bottom:6px; display:block;">Disparo Rápido de Teste:</label>
+                  <div style="display:flex; gap:8px;">
+                    <input type="text" id="test-wa-phone" class="form-input" placeholder="(41) 99535-0811" style="flex:1;">
+                    <button class="btn btn-whatsapp btn-sm" id="btn-send-test-wa">Enviar Teste</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= POSTADOR AUTOMÁTICO FACEBOOK ================= -->
+        <section class="view-panel" id="view-facebook-poster">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">Postador Facebook & Marketplace</h1>
+              <p class="view-subtitle">Publique carros do estoque com 1 clique no Facebook Marketplace, Fanpage e Grupos</p>
+            </div>
+            <div class="view-actions">
+              <a href="https://www.facebook.com/marketplace/create/vehicle" target="_blank" class="btn btn-outline">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Abrir Facebook Marketplace
+              </a>
+            </div>
+          </div>
+
+          <div class="dashboard-columns">
+            <!-- Painel de Postagem de Veículo -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">🚗 Seleção de Veículo & Formatação de Anúncio</h3>
+              </div>
+              <div class="card-body">
+                <div class="form-group">
+                  <label>Escolha o Veículo para Anunciar</label>
+                  <select id="fb-vehicle-select" class="form-select">
+                    <option value="">Selecione um dos 24 carros do estoque...</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Canal de Destino</label>
+                  <div class="destination-chips">
+                    <label class="dest-chip active">
+                      <input type="checkbox" id="dest-marketplace" checked>
+                      <span>🛒 Facebook Marketplace</span>
+                    </label>
+                    <label class="dest-chip active">
+                      <input type="checkbox" id="dest-fanpage" checked>
+                      <span>🏢 Página TatuCar (@tatucarveiculos)</span>
+                    </label>
+                    <label class="dest-chip">
+                      <input type="checkbox" id="dest-groups">
+                      <span>👥 Grupos de Compra e Venda Curitiba</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="car-preview-mini" id="fb-car-preview" style="display:none; margin:16px 0; padding:14px; background:var(--bg-input); border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                  <div style="display:flex; gap:14px; align-items:center;">
+                    <img id="fb-preview-img" src="" style="width:100px; height:70px; object-fit:cover; border-radius:6px;">
+                    <div>
+                      <strong id="fb-preview-title" style="color:var(--text-main);">Modelo</strong><br>
+                      <span id="fb-preview-price" style="color:var(--primary-400); font-weight:700;">R$ 0,00</span> • <small id="fb-preview-year" class="text-muted">Ano</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="post-actions-cluster">
+                  <button class="btn btn-primary w-full" id="btn-post-to-marketplace">
+                    🚀 Publicar no Facebook Marketplace (1-Clique)
+                  </button>
+                  <button class="btn btn-outline w-full" id="btn-copy-fb-package" style="margin-top:8px;">
+                    📋 Copiar Pacote Completo (Texto + Título + Fotos)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Calendário Editorial Semanal e Diretrizes -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">📅 Grade de Postagens Semanal (Seção 13)</h3>
+                <span class="badge-tag aprovado">Estratégia Oficial</span>
+              </div>
+              <div class="card-body">
+                <div class="weekly-schedule">
+                  <div class="schedule-day">
+                    <span class="day-badge">Segunda</span>
+                    <div class="day-content">
+                      <strong>Oportunidade da Semana</strong>
+                      <small>Carro de fácil aprovação e parcela acessível</small>
+                    </div>
+                  </div>
+                  <div class="schedule-day">
+                    <span class="day-badge">Terça</span>
+                    <div class="day-content">
+                      <strong>Vídeo Curto / Reels</strong>
+                      <small>Apresentação dinâmica do estoque no pátio</small>
+                    </div>
+                  </div>
+                  <div class="schedule-day">
+                    <span class="day-badge">Quarta</span>
+                    <div class="day-content">
+                      <strong>Simulação & Financiamento</strong>
+                      <small>Explicação sobre crédito, autônomos e score</small>
+                    </div>
+                  </div>
+                  <div class="schedule-day">
+                    <span class="day-badge">Quinta</span>
+                    <div class="day-content">
+                      <strong>Apresentação do Estoque</strong>
+                      <small>Carros utilitários, trabalho e família</small>
+                    </div>
+                  </div>
+                  <div class="schedule-day highlight-day">
+                    <span class="day-badge">Sexta / Sábado 🔥</span>
+                    <div class="day-content">
+                      <strong>Destaque Comercial & Visitas</strong>
+                      <small>Chamada para visitar a loja na Rua Enette Dubard, 1111</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="marketplace-safety-note" style="margin-top:16px; padding:12px; background:rgba(37,99,235,0.08); border-radius:8px; border:1px solid rgba(37,99,235,0.2);">
+                  <strong style="color:var(--primary-400); font-size:0.8rem;">🛡️ Regra Anti-Bloqueio Meta:</strong>
+                  <p style="font-size:0.75rem; color:var(--text-secondary); margin-top:4px;">As postagens preservam fotos reais e dados verídicos sem modificar placa ou características, evitando banimento de anúncios pelo algoritmo do Facebook.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
     </main>
   </div>
 
