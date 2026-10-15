@@ -1696,4 +1696,5 @@ Posso te passar os detalhes agora?"`;
 let crm;
 window.addEventListener('DOMContentLoaded', () => {
   crm = new CrmApp();
+  window.crm = crm;
 });

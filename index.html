@@ -691,7 +691,7 @@
                   </div>
 
                   <div class="connection-actions">
-                    <button class="btn btn-whatsapp w-full" id="btn-generate-qr">
+                    <button class="btn btn-whatsapp w-full" id="btn-generate-qr" onclick="crm.generateWhatsAppQr()">
                       📲 Conectar WhatsApp Comercial (Parear QR Code)
                     </button>
                     <button class="btn btn-outline w-full" id="btn-toggle-api-settings">
@@ -765,7 +765,7 @@
                   <label style="font-size:0.82rem; font-weight:600; color:var(--text-secondary); margin-bottom:6px; display:block;">Disparo Rápido de Teste:</label>
                   <div style="display:flex; gap:8px;">
                     <input type="text" id="test-wa-phone" class="form-input" placeholder="(41) 99535-0811" style="flex:1;">
-                    <button class="btn btn-whatsapp btn-sm" id="btn-send-test-wa">Enviar Teste</button>
+                    <button class="btn btn-whatsapp btn-sm" id="btn-send-test-wa" onclick="crm.sendTestWhatsApp()">Enviar Teste</button>
                   </div>
                 </div>
               </div>
@@ -1145,6 +1145,6 @@
 
   <div id="toast" class="toast">Ação concluída com sucesso!</div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
