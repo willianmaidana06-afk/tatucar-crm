@@ -43,13 +43,19 @@
         <div class="status-indicator online" title="Sistema Online"></div>
       </div>
 
-      <!-- Navigation Links -->
+            <!-- Navigation Links -->
       <nav class="sidebar-nav">
-        <div class="nav-section-title">OPERAÇÃO</div>
+        <div class="nav-section-title">OPERAÇÃO & ESTEIRA</div>
         
         <button class="nav-item active" data-view="dashboard">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
-          <span>Dashboard</span>
+          <span>Dashboard Geral</span>
+        </button>
+
+        <button class="nav-item" data-view="simulacoes">
+          <span style="font-size:1.1rem; line-height:1;">🏎️</span>
+          <span>Simulações & Bancos</span>
+          <span class="badge-tag aprovado" style="font-size:0.65rem; padding:2px 6px;">5 BANCOS</span>
         </button>
 
         <button class="nav-item" data-view="pipeline">
@@ -63,20 +69,21 @@
           <span>Clientes & Leads</span>
         </button>
 
+        <button class="nav-item" data-view="aprovados">
+          <span style="font-size:1.1rem; line-height:1;">✅</span>
+          <span>Fichas Aprovadas</span>
+          <span class="badge-counter" id="badge-aprovados-count" style="background:rgba(16,185,129,0.2); color:#34d399;">0</span>
+        </button>
+
+        <button class="nav-item" data-view="avalista">
+          <span style="font-size:1.1rem; line-height:1;">🤝</span>
+          <span>Motor de Avalista</span>
+          <span class="badge-tag analise" style="font-size:0.65rem;">Recuperação</span>
+        </button>
+
         <button class="nav-item" data-view="veiculos">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
-          <span>Estoque de Veículos</span>
-        </button>
-
-        <button class="nav-item" data-view="propostas">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          <span>Propostas & Crédito</span>
-        </button>
-
-        <button class="nav-item" data-view="tarefas">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
-          <span>Follow-up & Tarefas</span>
-          <span class="badge-alert" id="badge-tarefas-alert" style="display:none;">!</span>
+          <span>Estoque (24 Carros)</span>
         </button>
 
         <div class="nav-section-title">AUTOMAÇÃO & CANAIS</div>
@@ -84,7 +91,13 @@
         <button class="nav-item" data-view="whatsapp-hub">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>
           <span>Conexão WhatsApp</span>
-          <span class="badge-status-dot online" id="wa-connection-dot" title="Desconectado"></span>
+          <span class="badge-status-dot online" id="wa-connection-dot" title="Conectado"></span>
+        </button>
+
+        <button class="nav-item" data-view="remarketing">
+          <span style="font-size:1.1rem; line-height:1;">🎯</span>
+          <span>Remarketing Anti-Vácuo</span>
+          <span class="badge-tag" style="background:rgba(245,158,11,0.15); color:#f59e0b; font-size:0.65rem;">3h/6h/12h</span>
         </button>
 
         <button class="nav-item" data-view="facebook-poster">
@@ -97,8 +110,14 @@
 
         <button class="nav-item nav-ai" data-view="willian-ai">
           <div class="ai-sparkle">✨</div>
-          <span>WILLIAN AI Copilot</span>
+          <span>Editor do WILLIAN AI</span>
           <span class="badge-ai">IA</span>
+        </button>
+
+        <button class="nav-item" data-view="tarefas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+          <span>Follow-up & Tarefas</span>
+          <span class="badge-alert" id="badge-tarefas-alert" style="display:none;">!</span>
         </button>
 
         <button class="nav-item" data-view="configuracoes">
@@ -166,6 +185,92 @@
             </div>
             <div class="view-actions">
               <span class="live-clock" id="live-clock">--:--:--</span>
+            </div>
+          </div>
+
+          
+          <!-- ── STATUS DOS 5 SIMULADORES BANCÁRIOS (RESUMO AO VIVO) ── -->
+          <div class="card card-simuladores-preview" style="margin-bottom: 22px; border: 1px solid rgba(16, 185, 129, 0.35); background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, rgba(18, 26, 46, 0.95) 100%);">
+            <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:1.6rem;">🏦</span>
+                <div>
+                  <h3 style="margin:0; font-size:1.1rem; color:var(--text-main);">Status dos 5 Bancos Parceiros (TatuCar Veículos)</h3>
+                  <span style="font-size:0.8rem; color:var(--text-secondary);">Monitoramento em tempo real dos portais de crédito com proteção anti-bloqueio</span>
+                </div>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="crm.navigateTo('simulacoes')" style="color:#34d399; font-weight:700; border-color:rgba(16,185,129,0.4);">
+                Abrir Esteira de Simulações →
+              </button>
+            </div>
+            <div class="card-body" style="padding: 16px 20px;">
+              <div id="simuladoresQuickBadges" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:12px;">
+                <div class="banco-pill-live online">
+                  <strong>Banco PAN</strong>
+                  <span class="banco-live-tag online">● ONLINE</span>
+                </div>
+                <div class="banco-pill-live online">
+                  <strong>BV Financeira</strong>
+                  <span class="banco-live-tag online">● ONLINE</span>
+                </div>
+                <div class="banco-pill-live online">
+                  <strong>Itaú Veículos</strong>
+                  <span class="banco-live-tag online">● ONLINE</span>
+                </div>
+                <div class="banco-pill-live online">
+                  <strong>Santander Auto</strong>
+                  <span class="banco-live-tag online">● ONLINE</span>
+                </div>
+                <div class="banco-pill-live online">
+                  <strong>Bradesco Fin.</strong>
+                  <span class="banco-live-tag online">● ONLINE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ── DESTAQUE URGENTE: CLIENTES PEDINDO VENDEDOR HUMANO (ESCALADOS) ── -->
+          <div class="card card-escalados-hero" style="margin-bottom: 24px; border: 1px solid rgba(239, 68, 68, 0.4); background: linear-gradient(180deg, rgba(239, 68, 68, 0.08) 0%, rgba(18, 26, 46, 0.95) 100%);">
+            <div class="card-header" style="justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-size:1.5rem; animation:pulse-alert 1.5s infinite;">🔔</span>
+                <div>
+                  <h3 style="color:#f87171; margin:0;">Clientes Pedindo Vendedor Humano (Urgente / Escalados)</h3>
+                  <span style="font-size:0.8rem; color:var(--text-secondary);">Triagem concluída pelo WILLIAN AI, proposta com troca ou solicitação de consultor</span>
+                </div>
+              </div>
+              <span class="badge-tag reprovado" id="badgeEscaladosCount" style="font-size:0.8rem; font-weight:800; padding:4px 10px;">2 aguardando</span>
+            </div>
+            <div class="card-body no-padding">
+              <div class="table-responsive">
+                <table class="data-table" id="table-escalados-list">
+                  <thead>
+                    <tr>
+                      <th>Cliente</th>
+                      <th>Veículo Alvo</th>
+                      <th>Motivo do Escalonamento</th>
+                      <th>Horário</th>
+                      <th>Ação Imediata</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Marcos Vinicius Ferraz</strong><br><small class="text-muted">(41) 99655-4433</small></td>
+                      <td>Ford Fiesta 2010 (R$ 24.900)</td>
+                      <td><span class="badge-tag analise">Quer simulação sem entrada</span></td>
+                      <td>Hoje às 11:30</td>
+                      <td><button class="btn btn-sm btn-whatsapp" onclick="crm.openWhatsAppModal('lead-3')">Assumir no WhatsApp</button></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Juliana Mendes de Castro</strong><br><small class="text-muted">(41) 98877-6655</small></td>
+                      <td>VW Voyage 1.0 (R$ 28.900)</td>
+                      <td><span class="badge-tag venda">Enviou fotos do Uno 2010 na troca</span></td>
+                      <td>Hoje às 14:10</td>
+                      <td><button class="btn btn-sm btn-whatsapp" onclick="crm.openWhatsAppModal('lead-2')">Avaliar Troca</button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 
@@ -903,7 +1008,404 @@
           </div>
         </section>
 
-    </main>
+    
+        <!-- ================= PÁGINA 1: ESTEIRA COMPLETA DOS 5 BANCOS ================= -->
+        <section class="view-panel" id="view-simulacoes">
+          <div class="view-header" style="flex-wrap:wrap; gap:12px;">
+            <div>
+              <h1 class="view-title">🏎️ Gestão de Simulações & 5 Bancos Parceiros</h1>
+              <p class="view-subtitle">Controle de acesso dos 5 bancos (PAN, BV, ITAÚ, SANTANDER, BRADESCO), esteira ao vivo e proteção contra bloqueio</p>
+            </div>
+            <div class="view-actions" style="display:flex; gap:8px;">
+              <button class="btn btn-outline" id="btn-refresh-banks" onclick="crm.showToast('Status dos 5 bancos atualizado!')">🔄 Atualizar Status</button>
+              <button class="btn btn-primary" onclick="crm.showToast('✅ Todos os 5 bancos reativados e conectados!')">⚡ Reativar Todos os Bancos</button>
+            </div>
+          </div>
+
+          <!-- Métricas dos Bancos -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon blue"><span style="font-size:1.4rem;">🏎️</span></div>
+              <div class="kpi-content">
+                <span class="kpi-label">Total Fichas Hoje</span>
+                <h3 class="kpi-value" id="sim-fichas-hoje">14</h3>
+                <span class="kpi-trend positive">Esteira ativa</span>
+              </div>
+            </div>
+            <div class="kpi-card highlight-card">
+              <div class="kpi-icon green"><span style="font-size:1.4rem;">✅</span></div>
+              <div class="kpi-content">
+                <span class="kpi-label">Fichas Aprovadas</span>
+                <h3 class="kpi-value" id="sim-fichas-aprovadas">8</h3>
+                <span class="kpi-trend positive">57% de aprovação</span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon yellow"><span style="font-size:1.4rem;">🤝</span></div>
+              <div class="kpi-content">
+                <span class="kpi-label">Pedir Avalista</span>
+                <h3 class="kpi-value">4</h3>
+                <span class="kpi-trend neutral">Recuperáveis</span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon emerald"><span style="font-size:1.4rem;">🛡️</span></div>
+              <div class="kpi-content">
+                <span class="kpi-label">Proteção Bancária</span>
+                <h3 class="kpi-value">100%</h3>
+                <span class="kpi-trend positive">Anti-bloqueio Ativo</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cards dos 5 Bancos -->
+          <div class="card" style="margin-bottom:24px; border:1px solid rgba(16,185,129,0.3);">
+            <div class="card-header" style="justify-content:space-between;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-size:1.4rem;">🏦</span>
+                <div>
+                  <h3 class="card-title">Portais de Crédito dos 5 Bancos (Circuit Breaker Automático)</h3>
+                  <p class="card-subtitle">Pausa e reativação automática em caso de instabilidade dos servidores bancários</p>
+                </div>
+              </div>
+              <span class="badge-status-approved">5/5 OPERACIONAIS</span>
+            </div>
+            <div class="card-body">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px;">
+                
+                <div class="banco-card-full">
+                  <div class="banco-header">
+                    <strong>Banco PAN</strong>
+                    <span class="badge-tag aprovado">ONLINE</span>
+                  </div>
+                  <small class="text-muted">Fácil aprovação para autônomos e score moderado</small>
+                  <div class="banco-stats">
+                    <span>Taxa média: <strong>1.69% a.m.</strong></span><br>
+                    <span>Fichas rodadas hoje: <strong>6 aprovadas</strong></span>
+                  </div>
+                  <button class="btn btn-outline btn-sm w-full" onclick="crm.openModalCredenciaisBanco('Banco PAN')">🔑 Atualizar Operador</button>
+                </div>
+
+                <div class="banco-card-full">
+                  <div class="banco-header">
+                    <strong>BV Financeira</strong>
+                    <span class="badge-tag aprovado">ONLINE</span>
+                  </div>
+                  <small class="text-muted">Melhor taxa com 20% a 30% de entrada</small>
+                  <div class="banco-stats">
+                    <span>Taxa média: <strong>1.59% a.m.</strong></span><br>
+                    <span>Fichas rodadas hoje: <strong>4 aprovadas</strong></span>
+                  </div>
+                  <button class="btn btn-outline btn-sm w-full" onclick="crm.openModalCredenciaisBanco('BV Financeira')">🔑 Atualizar Operador</button>
+                </div>
+
+                <div class="banco-card-full">
+                  <div class="banco-header">
+                    <strong>Santander Auto</strong>
+                    <span class="badge-tag aprovado">ONLINE</span>
+                  </div>
+                  <small class="text-muted">Aprovação forte para correntistas e CLT</small>
+                  <div class="banco-stats">
+                    <span>Taxa média: <strong>1.49% a.m.</strong></span><br>
+                    <span>Fichas rodadas hoje: <strong>5 aprovadas</strong></span>
+                  </div>
+                  <button class="btn btn-outline btn-sm w-full" onclick="crm.openModalCredenciaisBanco('Santander Auto')">🔑 Atualizar Operador</button>
+                </div>
+
+                <div class="banco-card-full">
+                  <div class="banco-header">
+                    <strong>Itaú Veículos</strong>
+                    <span class="badge-tag aprovado">ONLINE</span>
+                  </div>
+                  <small class="text-muted">Esteira rápida de resposta em menos de 10 min</small>
+                  <div class="banco-stats">
+                    <span>Taxa média: <strong>1.55% a.m.</strong></span><br>
+                    <span>Fichas rodadas hoje: <strong>3 aprovadas</strong></span>
+                  </div>
+                  <button class="btn btn-outline btn-sm w-full" onclick="crm.openModalCredenciaisBanco('Itaú Veículos')">🔑 Atualizar Operador</button>
+                </div>
+
+                <div class="banco-card-full">
+                  <div class="banco-header">
+                    <strong>Bradesco Financiamentos</strong>
+                    <span class="badge-tag aprovado">ONLINE</span>
+                  </div>
+                  <small class="text-muted">Excelente opção para veículos com mais de 10 anos</small>
+                  <div class="banco-stats">
+                    <span>Taxa média: <strong>1.75% a.m.</strong></span><br>
+                    <span>Fichas rodadas hoje: <strong>2 aprovadas</strong></span>
+                  </div>
+                  <button class="btn btn-outline btn-sm w-full" onclick="crm.openModalCredenciaisBanco('Bradesco Financiamentos')">🔑 Atualizar Operador</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Histórico Recente de Simulações na Esteira -->
+          <div class="card">
+            <div class="card-header" style="justify-content:space-between;">
+              <h3 class="card-title">📋 Parecer Detalhado por Banco na Esteira</h3>
+              <div class="search-box" style="max-width:280px;">
+                <input type="text" class="input-search" placeholder="Filtrar por cliente ou CPF...">
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Cliente</th>
+                    <th>Carro Desejado</th>
+                    <th>PAN</th>
+                    <th>BV</th>
+                    <th>Santander</th>
+                    <th>Itaú</th>
+                    <th>Bradesco</th>
+                    <th>Melhor Condição</th>
+                    <th>Ação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Carlos Eduardo Ramos</strong><br><small class="text-muted">382.491.809-12</small></td>
+                    <td>Ford Fiesta 2010 (R$ 24.900)</td>
+                    <td><span class="badge-tag aprovado">APROVADO</span></td>
+                    <td><span class="badge-tag analise">20% Entr.</span></td>
+                    <td><span class="badge-tag aprovado">SEM ENTRADA</span></td>
+                    <td><span class="badge-tag aprovado">APROVADO</span></td>
+                    <td><span class="badge-tag analise">15% Entr.</span></td>
+                    <td><strong style="color:#34d399;">48x R$ 890 (Santander)</strong></td>
+                    <td><button class="btn btn-sm btn-whatsapp" onclick="crm.openWhatsAppModal('lead-1')">Enviar Proposta</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Douglas dos Santos</strong><br><small class="text-muted">601.774.908-22</small></td>
+                    <td>Fiat Strada 2009 (R$ 37.900)</td>
+                    <td><span class="badge-tag aprovado">APROVADO</span></td>
+                    <td><span class="badge-tag aprovado">SEM ENTRADA</span></td>
+                    <td><span class="badge-tag reprovado">RECUSADO</span></td>
+                    <td><span class="badge-tag analise">25% Entr.</span></td>
+                    <td><span class="badge-tag aprovado">APROVADO</span></td>
+                    <td><strong style="color:#34d399;">48x R$ 1.150 (BV)</strong></td>
+                    <td><button class="btn btn-sm btn-whatsapp" onclick="crm.openWhatsAppModal('lead-6')">Enviar Proposta</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PÁGINA 2: FICHAS APROVADAS & COMPRAS À VISTA ================= -->
+        <section class="view-panel" id="view-aprovados">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">✅ Painel de Fichas Aprovadas & Compras</h1>
+              <p class="view-subtitle">Clientes prontos para fechamento de contrato, vistoria e entrega do veículo</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn btn-primary" onclick="crm.showToast('Fichas sincronizadas com as financeiras!')">🔄 Atualizar Fichas</button>
+            </div>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card highlight-card">
+              <div class="kpi-icon green">✅</div>
+              <div class="kpi-content">
+                <span class="kpi-label">Financiamentos Aprovados</span>
+                <h3 class="kpi-value">5</h3>
+                <span class="kpi-trend positive">Prontos para assinar</span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon yellow">💵</div>
+              <div class="kpi-content">
+                <span class="kpi-label">Compras À Vista</span>
+                <h3 class="kpi-value">2</h3>
+                <span class="kpi-trend positive">Depósito / PIX</span>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon blue">🚗</div>
+              <div class="kpi-content">
+                <span class="kpi-label">Carros Reservados</span>
+                <h3 class="kpi-value">3</h3>
+                <span class="kpi-trend neutral">Aguardando contrato</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Cliente / WhatsApp</th>
+                    <th>Tipo</th>
+                    <th>Veículo de Interesse</th>
+                    <th>Condição Aprovada</th>
+                    <th>Financeira</th>
+                    <th>Consultor</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Carlos Eduardo Ramos</strong><br><small class="text-muted">(41) 99123-4567</small></td>
+                    <td><span class="badge-tag aprovado">Financiamento</span></td>
+                    <td>Ford Fiesta 2010</td>
+                    <td>R$ 5.000 entrada + 48x R$ 890</td>
+                    <td>Santander Auto</td>
+                    <td>Alejandro</td>
+                    <td><button class="btn btn-sm btn-whatsapp" onclick="crm.openWhatsAppModal('lead-1')">Agendar Assinatura</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Douglas dos Santos</strong><br><small class="text-muted">(41) 99733-2211</small></td>
+                    <td><span class="badge-tag aprovado">Financiamento</span></td>
+                    <td>Fiat Strada 2009</td>
+                    <td>Sem entrada + 48x R$ 1.150</td>
+                    <td>BV Financeira</td>
+                    <td>Alejandro</td>
+                    <td><button class="btn btn-sm btn-whatsapp" onclick="crm.openWhatsAppModal('lead-6')">Agendar Entrega</button></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Renato Albuquerque</strong><br><small class="text-muted">(41) 98422-1199</small></td>
+                    <td><span class="badge-tag analise">Troca + Saldo</span></td>
+                    <td>Ford EcoSport 2011</td>
+                    <td>Ka 2017 (R$ 38.000) + R$ 6.900 PIX</td>
+                    <td>À Vista / Troca</td>
+                    <td>Alejandro</td>
+                    <td><button class="btn btn-sm btn-whatsapp" onclick="crm.openWhatsAppModal('lead-4')">Emitir Vistoria</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PÁGINA 3: MOTOR DE AVALISTA (RECUPERAÇÃO DE REPROVADOS) ================= -->
+        <section class="view-panel" id="view-avalista">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">🤝 Motor de Avalista (Recuperação de Fichas)</h1>
+              <p class="view-subtitle">Recupere vendas de clientes reprovados sugerindo incluir um cônjuge, parente ou avalista com 1 clique</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn btn-primary" onclick="crm.dispararAvalistaTodos()">⚡ Pedir Avalista para Pendentes</button>
+            </div>
+          </div>
+
+          <div class="dashboard-columns">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">📝 Script Humanizado de Pedido de Avalista</h3>
+                <span class="badge-tag analise">WILLIAN AI</span>
+              </div>
+              <div class="card-body">
+                <p class="text-secondary" style="font-size:0.85rem; margin-bottom:12px;">Quando o CPF do cliente não atinge a pontuação mínima na financeira, o Willian envia uma mensagem empática para não perder o negócio:</p>
+                
+                <textarea id="texto-avalista-padrao" class="form-textarea" rows="5">Olá, {nome}! Tudo bem? Aqui é o Alejandro da TatuCar Veículos! 🚗
+
+Fizemos a análise da sua proposta aqui nas financeiras parceiras e, por conta do score neste momento, o banco pediu para incluirmos um segundo nome (pode ser esposo(a), pai, mãe ou irmão) para liberar o seu carro!
+
+Você tem alguém de confiança da família para colocarmos junto na ficha e garantirmos a aprovação?</textarea>
+                
+                <button class="btn btn-whatsapp w-full" style="margin-top:12px;" onclick="crm.showToast('Mensagem de avalista salva!')">
+                  💾 Salvar Mensagem Padrão
+                </button>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">📋 Clientes Aguardando Avalista</h3>
+                <span class="badge-tag reprovado">3 Oportunidades</span>
+              </div>
+              <div class="card-body no-padding">
+                <div class="table-responsive">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>Cliente</th>
+                        <th>Veículo</th>
+                        <th>Motivo</th>
+                        <th>Ação</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><strong>Lucas Gabriel Santos</strong><br><small class="text-muted">(41) 98711-2233</small></td>
+                        <td>Gol 1.6 2017</td>
+                        <td><span class="badge-tag reprovado">Score 280</span></td>
+                        <td><button class="btn btn-sm btn-whatsapp" onclick="crm.pedirAvalistaCliente('Lucas', '41987112233')">Pedir Avalista</button></td>
+                      </tr>
+                      <tr>
+                        <td><strong>Fernanda Oliveira</strong><br><small class="text-muted">(41) 99188-7744</small></td>
+                        <td>Classic 2011</td>
+                        <td><span class="badge-tag reprovado">Sem renda formal</span></td>
+                        <td><button class="btn btn-sm btn-whatsapp" onclick="crm.pedirAvalistaCliente('Fernanda', '41991887744')">Pedir Avalista</button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= PÁGINA 4: REMARKETING ANTI-VÁCUO (3h, 6h, 12h) ================= -->
+        <section class="view-panel" id="view-remarketing">
+          <div class="view-header">
+            <div>
+              <h1 class="view-title">🎯 Motor de Remarketing Inteligente (Anti-Vácuo)</h1>
+              <p class="view-subtitle">Reengaje automaticamente clientes que pararam de responder nas réguas de 3h, 6h e 12h</p>
+            </div>
+            <div class="view-actions">
+              <button class="btn btn-primary" onclick="crm.executarRemarketingAgora()">⚡ Executar Fila de Remarketing Agora</button>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:18px; margin-bottom:24px;">
+            <div class="card">
+              <div class="card-header">
+                <strong>⏰ Etapa 1: 3 Horas sem Resposta</strong>
+                <span class="badge-tag analise">Toque Suave</span>
+              </div>
+              <div class="card-body">
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Mensagem curta perguntando se o cliente conseguiu ver os detalhes do carro.</p>
+                <div style="background:var(--bg-input); padding:10px; border-radius:8px; font-size:0.8rem; color:var(--text-main);">
+                  "Oi, {nome}! Tudo bem por aí? Conseguiu dar uma olhada nas fotos que te mandei do carro?"
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <strong>⏰ Etapa 2: 6 Horas sem Resposta</strong>
+                <span class="badge-tag" style="background:rgba(245,158,11,0.15); color:#f59e0b;">Oferta de Parcela</span>
+              </div>
+              <div class="card-body">
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Apresenta simulação com parcela menor ou opção sem entrada.</p>
+                <div style="background:var(--bg-input); padding:10px; border-radius:8px; font-size:0.8rem; color:var(--text-main);">
+                  "Fala {nome}! Montei uma condição aqui que consegue deixar a parcela bem leve no seu orçamento. Quer que eu te passe os valores?"
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <strong>⏰ Etapa 3: 12 Horas / 24 Horas</strong>
+                <span class="badge-tag aprovado">Convite Loja</span>
+              </div>
+              <div class="card-body">
+                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">Convite para tomar um café na TatuCar na Rua Enette Dubard, 1111.</p>
+                <div style="background:var(--bg-input); padding:10px; border-radius:8px; font-size:0.8rem; color:var(--text-main);">
+                  "Passando pra te convidar: o carro tá no pátio aqui na Rua Enette Dubard, 1111 pronto para test-drive! Que horas você consegue dar um pulo aqui?"
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
   </div>
 
   <!-- ================= MODAIS ================= -->

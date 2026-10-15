@@ -1652,3 +1652,46 @@ input:checked + .slider:before {
   font-size: 0.72rem;
   color: var(--text-muted);
 }
+
+
+/* ================= BANCOS & SIMULAÇÕES ESTEIRA ================= */
+.banco-pill-live {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+.banco-live-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+}
+.banco-live-tag.online { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+.banco-card-full {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.banco-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.banco-stats {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 6px 0;
+  padding: 8px;
+  background: rgba(0,0,0,0.15);
+  border-radius: var(--radius-sm);
+}

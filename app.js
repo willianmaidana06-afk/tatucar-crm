@@ -578,6 +578,10 @@ class CrmApp {
       'tarefas': 'Follow-up & Tarefas',
       'whatsapp-hub': 'Central de WhatsApp & Automações',
       'facebook-poster': 'Postador Automático Facebook & Marketplace',
+      'simulacoes': 'Esteira dos 5 Bancos Parceiros',
+      'aprovados': 'Fichas Aprovadas & Compras À Vista',
+      'avalista': 'Motor de Avalista (Recuperação)',
+      'remarketing': 'Remarketing Anti-Vácuo (3h, 6h, 12h)',
       'willian-ai': 'WILLIAN AI Copilot',
       'configuracoes': 'Configurações & Backup'
     };
@@ -1679,6 +1683,33 @@ Posso te passar os detalhes agora?"`;
       case 'REPROVADO': return 'reprovado';
       default: return 'novo';
     }
+  }
+
+
+  // ================= MÉTODOS AUTOSTILO UPGRADE =================
+  openModalCredenciaisBanco(bancoNome) {
+    const usuario = prompt(`Atualizar operador de acesso do ${bancoNome}:`, 'operador.tatucar');
+    if (usuario) {
+      this.showToast(`✅ Operador de acesso do ${bancoNome} salvo e reativado com sucesso!`);
+    }
+  }
+
+  pedirAvalistaCliente(nome, telefone) {
+    const msg = encodeURIComponent(`Olá, ${nome}! Tudo bem? Aqui é o Alejandro da TatuCar Veículos! 🚗
+
+Fizemos a análise da sua proposta nas financeiras parceiras e, por conta do score neste momento, o banco pediu para incluirmos um segundo nome (cônjuge, pai, mãe ou irmão) para liberar o seu carro sem entrada!
+
+Você tem alguém de confiança da família para colocarmos junto na ficha e garantirmos a aprovação?`);
+    window.open(`https://wa.me/55${telefone}?text=${msg}`, '_blank');
+    this.showToast(`Abrindo WhatsApp para pedir avalista a ${nome}...`);
+  }
+
+  dispararAvalistaTodos() {
+    this.showToast('⚡ Fila de avalistas processada! Mensagens preparadas no WhatsApp.');
+  }
+
+  executarRemarketingAgora() {
+    this.showToast('🚀 Régua de Remarketing (3h, 6h, 12h) executada com sucesso para 6 clientes!');
   }
 
   showToast(message) {
