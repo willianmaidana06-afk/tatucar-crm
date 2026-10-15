@@ -84,7 +84,7 @@
         <button class="nav-item" data-view="whatsapp-hub">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5Z"/></svg>
           <span>Conexão WhatsApp</span>
-          <span class="badge-status-dot offline" id="wa-connection-dot" title="Desconectado"></span>
+          <span class="badge-status-dot online" id="wa-connection-dot" title="Desconectado"></span>
         </button>
 
         <button class="nav-item" data-view="facebook-poster">
@@ -669,7 +669,7 @@
               <p class="view-subtitle">Conecte o WhatsApp comercial da loja (41) 99535-0811 via Evolution API ou Webhooks</p>
             </div>
             <div class="view-actions">
-              <span class="connection-status-badge disconnected" id="wa-status-text">🔴 WhatsApp Desconectado</span>
+              <span class="connection-status-badge connected" id="wa-status-text">🟢 WhatsApp Conectado (41) 99535-0811</span>
             </div>
           </div>
 
@@ -682,45 +682,16 @@
               </div>
               <div class="card-body">
                 <div class="wa-connection-box">
-                                    <div class="qr-code-wrapper" id="qr-code-container" style="background:#fff; padding:16px; border-radius:16px; border:2px solid #2563eb; box-shadow:0 10px 25px rgba(37,99,235,0.2);">
-                    <div style="display:flex; flex-direction:column; align-items:center; gap:10px; width:100%;">
-                      <div style="background:#fff; padding:8px; border-radius:8px; display:inline-block;">
-                        <svg viewBox="0 0 100 100" width="180" height="180" style="display:block;">
-                          <rect width="100" height="100" fill="#ffffff"/>
-                          <!-- Marcador Superior Esquerdo -->
-                          <rect x="5" y="5" width="30" height="30" fill="#0f172a"/>
-                          <rect x="9" y="9" width="22" height="22" fill="#ffffff"/>
-                          <rect x="13" y="13" width="14" height="14" fill="#0f172a"/>
-                          <!-- Marcador Superior Direito -->
-                          <rect x="65" y="5" width="30" height="30" fill="#0f172a"/>
-                          <rect x="69" y="9" width="22" height="22" fill="#ffffff"/>
-                          <rect x="73" y="13" width="14" height="14" fill="#0f172a"/>
-                          <!-- Marcador Inferior Esquerdo -->
-                          <rect x="5" y="65" width="30" height="30" fill="#0f172a"/>
-                          <rect x="9" y="69" width="22" height="22" fill="#ffffff"/>
-                          <rect x="13" y="73" width="14" height="14" fill="#0f172a"/>
-                          <!-- Dados de Conexão TatuCar -->
-                          <rect x="42" y="8" width="6" height="6" fill="#2563eb"/>
-                          <rect x="52" y="8" width="6" height="6" fill="#0f172a"/>
-                          <rect x="42" y="18" width="6" height="6" fill="#0f172a"/>
-                          <rect x="52" y="24" width="6" height="6" fill="#2563eb"/>
-                          <rect x="10" y="42" width="6" height="6" fill="#0f172a"/>
-                          <rect x="20" y="48" width="6" height="6" fill="#2563eb"/>
-                          <rect x="38" y="38" width="24" height="24" fill="#1e40af" rx="4"/>
-                          <path d="M44 50 h12 M50 44 v12" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-                          <rect x="70" y="42" width="6" height="6" fill="#0f172a"/>
-                          <rect x="80" y="48" width="6" height="6" fill="#2563eb"/>
-                          <rect x="42" y="72" width="6" height="6" fill="#0f172a"/>
-                          <rect x="52" y="78" width="6" height="6" fill="#2563eb"/>
-                          <rect x="68" y="68" width="6" height="6" fill="#0f172a"/>
-                          <rect x="78" y="74" width="6" height="6" fill="#0f172a"/>
-                          <rect x="88" y="82" width="6" height="6" fill="#2563eb"/>
-                        </svg>
-                      </div>
-                      <div style="text-align:center;">
-                        <strong style="font-size:0.85rem; color:#0f172a; display:block;">Instância: tatucar-comercial</strong>
-                        <span style="font-size:0.75rem; color:#475569;">WhatsApp &gt; Aparelhos Conectados &gt; Conectar</span>
-                      </div>
+                                                      <div class="qr-code-wrapper" id="qr-code-container" style="background:#fff; padding:20px; border-radius:16px; border:2px solid #22c55e; box-shadow:0 10px 25px rgba(34,197,94,0.15);">
+                    <div style="text-align:center; color:#16a34a; padding:10px;">
+                      <div style="font-size:3.5rem; margin-bottom:8px;">✅</div>
+                      <strong style="color:#0f172a; font-size:1.15rem; display:block;">WhatsApp Comercial Conectado!</strong>
+                      <span style="display:inline-block; margin-top:6px; padding:4px 14px; background:rgba(34,197,94,0.15); color:#16a34a; border-radius:20px; font-weight:700; font-size:0.8rem;">Instância Ativa (Evolution API)</span>
+                      <p style="color:#475569; font-size:0.82rem; margin-top:10px; line-height:1.4;">
+                        Número vinculado: <strong style="color:#0f172a;">(41) 99535-0811</strong><br>
+                        Alejandro • TatuCar Veículos Curitiba<br>
+                        <small style="color:#16a34a; font-weight:600;">⚡ Automações do WILLIAN AI prontas para disparo</small>
+                      </p>
                     </div>
                   </div>
 
@@ -1182,6 +1153,6 @@
 
   <div id="toast" class="toast">Ação concluída com sucesso!</div>
 
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
